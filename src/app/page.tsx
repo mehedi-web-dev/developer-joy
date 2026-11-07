@@ -1,6 +1,12 @@
+import AboutSection from "./component/Home/AboutSection";
+import HeroSection from "./component/Home/HeroSection";
+
 
 export default function Home() {
   return (
- <h3>hasan</h3>
+    <main>
+      <HeroSection />
+      <AboutSection />
+    </main>
   );
 }
