@@ -17,9 +17,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DeveloperJoy | WordPress Developer",
-  description: "Professional WordPress Developer Portfolio",
+  title: "DeveloperJoy — WordPress Developer",
+  description:
+    "DeveloperJoy is a professional WordPress developer specializing in Elementor Pro, WooCommerce, custom WordPress development, security, and speed optimization.",
 };
+
+// Runs before the first paint so the saved theme is applied without a flash.
+const themeInitScript = `
+(function () {
+  try {
+    var theme = localStorage.getItem("theme");
+    if (theme !== "light" && theme !== "dark") theme = "dark";
+    var root = document.documentElement;
+    root.classList.toggle("dark", theme === "dark");
+    root.setAttribute("data-theme", theme);
+    root.style.colorScheme = theme;
+  } catch (error) {}
+})();
+`;
 
 export default function RootLayout({
   children,
@@ -29,9 +44,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
+      data-theme="dark"
     >
-      <body className="relative min-h-screen bg-gray-50 dark:bg-[#09090b]">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body className="relative min-h-screen bg-gray-50 text-foreground transition-colors duration-300 dark:bg-[#09090b]">
         {/* Animated Background */}
         <AnimatedBackground />
 

@@ -63,7 +63,7 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden bg-gray-50 py-24 dark:bg-[#09090b]"
+      className="relative overflow-hidden bg-transparent py-24"
     >
       <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-blue-500/10 blur-[120px]" />
       <div className="pointer-events-none absolute -right-40 bottom-10 h-80 w-80 rounded-full bg-purple-500/10 blur-[120px]" />
@@ -75,14 +75,14 @@ export default function ContactSection() {
               GET IN TOUCH
             </span>
 
-            <h2 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white md:text-5xl">
+            <h2 className="text-4xl font-bold tracking-tight text-foreground md:text-5xl">
               Let&apos;s Work{" "}
               <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
                 Together
               </span>
             </h2>
 
-            <p className="mx-auto mt-5 max-w-2xl text-gray-600 dark:text-gray-400">
+            <p className="mx-auto mt-5 max-w-2xl text-default-500">
               Have a project in mind? Let&apos;s discuss how I can help you
               build a professional, high-performing website.
             </p>
@@ -92,12 +92,12 @@ export default function ContactSection() {
         <div className="grid gap-12 lg:grid-cols-2">
           {/* Contact Information */}
           <ScrollReveal direction="left">
-            <div className="h-full rounded-3xl border border-gray-200 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-white/[0.03] md:p-10">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div className="h-full rounded-3xl border border-divider bg-default-50/50 p-8 shadow-sm backdrop-blur-md md:p-10">
+              <h3 className="text-2xl font-bold text-foreground">
                 Let&apos;s Talk About Your Project
               </h3>
 
-              <p className="mt-4 leading-7 text-gray-600 dark:text-gray-400">
+              <p className="mt-4 leading-7 text-default-500">
                 Whether you need a new WordPress website, a redesign, or help
                 fixing a technical issue, I&apos;m ready to help.
               </p>
@@ -119,10 +119,10 @@ export default function ContactSection() {
                       </div>
 
                       <div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                        <p className="text-sm text-default-400">
                           {item.label}
                         </p>
-                        <p className="font-semibold text-gray-900 dark:text-white">
+                        <p className="font-semibold text-foreground">
                           {item.value}
                         </p>
                       </div>
@@ -131,8 +131,8 @@ export default function ContactSection() {
                 })}
               </div>
 
-              <div className="mt-12 border-t border-gray-200 pt-8 dark:border-white/10">
-                <p className="mb-5 font-semibold text-gray-900 dark:text-white">
+              <div className="mt-12 border-t border-divider pt-8">
+                <p className="mb-5 font-semibold text-foreground">
                   Follow Me
                 </p>
 
@@ -163,9 +163,9 @@ export default function ContactSection() {
           <ScrollReveal direction="right" delay={0.15}>
             <form
               onSubmit={handleSubmit}
-              className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-white/[0.03] md:p-10"
+              className="rounded-3xl border border-divider bg-default-50/50 p-8 shadow-sm backdrop-blur-md md:p-10"
             >
-              <h3 className="mb-8 text-2xl font-bold text-gray-900 dark:text-white">
+              <h3 className="mb-8 text-2xl font-bold text-foreground">
                 Send Me a Message
               </h3>
 
@@ -173,7 +173,7 @@ export default function ContactSection() {
                 <div>
                   <label
                     htmlFor="contact-name"
-                    className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    className="mb-2 block text-sm font-medium text-default-600"
                   >
                     Your Name
                   </label>
@@ -186,14 +186,14 @@ export default function ContactSection() {
                       setFormData({ ...formData, name: e.target.value })
                     }
                     placeholder="Enter your name"
-                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white"
+                    className="w-full rounded-xl border border-divider bg-default-100/50 px-4 py-3 text-foreground outline-none transition placeholder:text-default-400 focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="contact-email"
-                    className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    className="mb-2 block text-sm font-medium text-default-600"
                   >
                     Email Address
                   </label>
@@ -206,14 +206,14 @@ export default function ContactSection() {
                       setFormData({ ...formData, email: e.target.value })
                     }
                     placeholder="Enter your email"
-                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white"
+                    className="w-full rounded-xl border border-divider bg-default-100/50 px-4 py-3 text-foreground outline-none transition placeholder:text-default-400 focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="contact-subject"
-                    className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    className="mb-2 block text-sm font-medium text-default-600"
                   >
                     Subject
                   </label>
@@ -226,14 +226,14 @@ export default function ContactSection() {
                       setFormData({ ...formData, subject: e.target.value })
                     }
                     placeholder="What is your project about?"
-                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white"
+                    className="w-full rounded-xl border border-divider bg-default-100/50 px-4 py-3 text-foreground outline-none transition placeholder:text-default-400 focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="contact-message"
-                    className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    className="mb-2 block text-sm font-medium text-default-600"
                   >
                     Message
                   </label>
@@ -246,7 +246,7 @@ export default function ContactSection() {
                       setFormData({ ...formData, message: e.target.value })
                     }
                     placeholder="Tell me about your project..."
-                    className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white"
+                    className="w-full resize-none rounded-xl border border-divider bg-default-100/50 px-4 py-3 text-foreground outline-none transition placeholder:text-default-400 focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
 
@@ -261,7 +261,7 @@ export default function ContactSection() {
                 </motion.button>
               </div>
 
-              <p className="mt-5 text-center text-xs text-gray-500 dark:text-gray-400">
+              <p className="mt-5 text-center text-xs text-default-400">
                 This form opens your default email application.
               </p>
             </form>

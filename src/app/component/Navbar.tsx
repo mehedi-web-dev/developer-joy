@@ -108,6 +108,7 @@ const Navbar = () => {
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     document.documentElement.classList.toggle("dark", isDark);
+    document.documentElement.style.colorScheme = theme;
   }, [theme, isDark]);
 
   // Theme Toggle

@@ -1,15 +1,65 @@
 @import "tailwindcss";
 
-@import "@heroui/styles"; 
+@import "@heroui/styles";
 
+/*
+ * The theme is controlled by the in-app toggle (`.dark` class +
+ * `data-theme` attribute), so opt out of HeroUI's system-preference
+ * fallback. Without this, a user on a dark OS who selects light mode
+ * still gets `dark:` utilities applied to descendants.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * HeroUI v3 renamed several design tokens. The app still uses the v2-style
+ * utility names (primary, default-50…700, divider), which otherwise resolve
+ * to nothing — most visibly making primary buttons transparent with white
+ * text in light mode. These aliases bridge the names to the v3 tokens.
+ */
+@theme inline {
+  --color-primary: var(--accent);
+  --color-primary-foreground: var(--accent-foreground);
+
+  --color-secondary: oklch(0.627 0.265 303.9);
+  --color-secondary-foreground: var(--snow);
+
+  --color-divider: var(--border);
+
+  --color-default-50: var(--default-soft);
+  --color-default-100: var(--default);
+  --color-default-200: var(--border);
+  --color-default-300: var(--border-secondary);
+  --color-default-400: var(--muted);
+  --color-default-500: var(--muted);
+  --color-default-600: color-mix(in oklab, var(--muted) 55%, var(--foreground) 45%);
+  --color-default-700: color-mix(in oklab, var(--muted) 30%, var(--foreground) 70%);
+}
+
+:root {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+@keyframes grid-pan {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 60px 60px;
+  }
+}
 
 .animated-grid {
   background-image:
     linear-gradient(to right, rgba(100, 116, 139, 0.12) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(100, 116, 139, 0.12) 1px, transparent 1px);
-  background-size: 50px 50px;
-  mask-image: linear-gradient(to bottom, black, transparent 90%);
-  -webkit-mask-image: linear-gradient(to bottom, black, transparent 90%);
+  background-size: 60px 60px;
+  animation: grid-pan 24s linear infinite;
+  mask-image: linear-gradient(to bottom, black, transparent 92%);
+  -webkit-mask-image: linear-gradient(to bottom, black, transparent 92%);
 }
 
 .dark .animated-grid {

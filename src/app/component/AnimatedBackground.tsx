@@ -5,22 +5,26 @@ import { motion, useReducedMotion } from "framer-motion";
 export default function AnimatedBackground() {
   const reduceMotion = useReducedMotion();
 
-  const floating = (duration: number, delay = 0) => ({
-    y: [0, -30, 0, 30, 0],
-    x: [0, 20, 0, -20, 0],
-    rotate: [0, 90, 180, 270, 360],
-    transition: {
-      duration: reduceMotion ? 0 : duration,
-      delay,
-      repeat: Infinity,
-      ease: "easeInOut" as const,
-    },
-  });
+  const floating = (duration: number, delay = 0) => {
+    if (reduceMotion) return {};
+
+    return {
+      y: [0, -30, 0, 30, 0],
+      x: [0, 20, 0, -20, 0],
+      rotate: [0, 90, 180, 270, 360],
+      transition: {
+        duration,
+        delay,
+        repeat: Infinity,
+        ease: "easeInOut" as const,
+      },
+    };
+  };
 
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
       {/* Background Base */}
-      <div className="absolute inset-0 bg-gray-50 dark:bg-[#09090b]" />
+      <div className="absolute inset-0 bg-gray-50 transition-colors duration-500 dark:bg-[#09090b]" />
 
       {/* Blue Glow */}
       <motion.div
@@ -56,14 +60,18 @@ export default function AnimatedBackground() {
 
         {/* Purple 3D Ring */}
         <motion.div
-          className="absolute right-[12%] top-[20%] h-24 w-24 rounded-full border-[5px] border-purple-600/50 shadow-[0_0_25px_rgba(147,51,234,0.25)] dark:border-purple-400/40"
+          className="absolute right-[12%] top-[20%]"
           animate={reduceMotion ? {} : { rotate: 360, y: [0, -25, 0] }}
           transition={{
             rotate: { duration: 15, repeat: Infinity, ease: "linear" },
             y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
           }}
-          style={{ transform: "rotateX(65deg) rotateY(25deg)" }}
-        />
+        >
+          <div
+            className="h-24 w-24 rounded-full border-[5px] border-purple-600/50 shadow-[0_0_25px_rgba(147,51,234,0.25)] dark:border-purple-400/40"
+            style={{ transform: "rotateX(65deg) rotateY(25deg)" }}
+          />
+        </motion.div>
 
         {/* Cyan Diamond */}
         <motion.div
@@ -73,12 +81,16 @@ export default function AnimatedBackground() {
 
         {/* Bottom Right Cube */}
         <motion.div
-          className="absolute bottom-[18%] right-[15%] h-20 w-20 border-2 border-blue-600/60 bg-blue-500/10 shadow-[0_0_30px_rgba(37,99,235,0.2)] dark:border-blue-400/40 dark:bg-blue-400/5"
+          className="absolute bottom-[18%] right-[15%]"
           animate={floating(16, 2)}
-          style={{
-            transform: "rotateX(45deg) rotateY(45deg)",
-          }}
-        />
+        >
+          <div
+            className="h-20 w-20 border-2 border-blue-600/60 bg-blue-500/10 shadow-[0_0_30px_rgba(37,99,235,0.2)] dark:border-blue-400/40 dark:bg-blue-400/5"
+            style={{
+              transform: "rotateX(45deg) rotateY(45deg)",
+            }}
+          />
+        </motion.div>
 
         {/* Floating Square */}
         <motion.div
@@ -104,7 +116,7 @@ export default function AnimatedBackground() {
       </div>
 
       {/* Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(100,116,139,0.12)_1px,transparent_1px),linear-gradient(to_bottom,rgba(100,116,139,0.12)_1px,transparent_1px)] bg-[size:60px_60px] dark:bg-[linear-gradient(to_right,rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.08)_1px,transparent_1px)]" />
+      <div className="animated-grid absolute inset-0 opacity-80 dark:opacity-100" />
     </div>
   );
 }

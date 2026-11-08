@@ -6,19 +6,19 @@ import ScrollReveal from "../ScrollReveal";
 
 const highlights = [
   {
-    number: "5+",
+    number: "6+",
     title: "Years Experience",
     description: "Professional WordPress development",
   },
   {
-    number: "500+",
+    number: "250+",
     title: "Completed Projects",
     description: "Successfully delivered projects",
   },
   {
-    number: "100%",
-    title: "Client Focused",
-    description: "Quality and client satisfaction",
+    number: "180+",
+    title: "Happy Clients",
+    description: "International client experience",
   },
 ];
 
@@ -26,16 +26,18 @@ const expertise = [
   "WordPress Development",
   "Elementor & Elementor Pro",
   "WooCommerce",
-  "Website Redesign",
-  "Malware Removal",
+  "Custom WordPress Development",
+  "Malware Removal & Security",
   "Performance Optimization",
+  "Website Redesign & Migration",
+  "International Client Support",
 ];
 
 const AboutSection = () => {
   return (
     <section
       id="about"
-      className="relative w-full overflow-hidden bg-background py-24 sm:py-32"
+      className="relative w-full overflow-hidden bg-transparent py-24 sm:py-32"
     >
       {/* Background Glow */}
       <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-primary/10 blur-[120px]" />
@@ -53,8 +55,8 @@ const AboutSection = () => {
           </h2>
 
           <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-default-500">
-            Passionate about building modern websites that deliver real value to
-            businesses.
+            Passionate about building modern WordPress websites that deliver
+            real value to businesses worldwide.
           </p>
         </ScrollReveal>
 
@@ -74,17 +76,18 @@ const AboutSection = () => {
               </div>
 
               <p className="leading-8 text-default-500">
-                I&apos;m a professional WordPress Developer with 5+ years of
-                experience and 500+ completed projects. I specialize in creating
-                responsive, modern and user-friendly websites that help
-                businesses establish a strong online presence.
+                I&apos;m Developer Joy, a professional WordPress developer with
+                6+ years of experience and 250+ completed projects. I build
+                responsive, secure, and high-performance websites for startups,
+                agencies, and eCommerce brands.
               </p>
 
               <p className="leading-8 text-default-500">
-                From custom WordPress development and Elementor websites to
-                WooCommerce solutions, redesigns, malware removal and
-                performance optimization, I focus on delivering reliable and
-                high-quality solutions.
+                My expertise covers Elementor Pro and WooCommerce development,
+                custom WordPress builds, malware removal and website security,
+                and performance optimization. I have worked with clients across
+                the US, Europe, and Asia, focusing on reliable delivery and
+                long-term results.
               </p>
 
               {/* Expertise */}

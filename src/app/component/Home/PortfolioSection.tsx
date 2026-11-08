@@ -76,7 +76,7 @@ const PortfolioSection = () => {
   return (
     <section
       id="portfolio"
-      className="relative w-full overflow-hidden bg-background py-24 sm:py-32"
+      className="relative w-full overflow-hidden bg-transparent py-24 sm:py-32"
     >
       {/* Background Effects */}
       <div className="pointer-events-none absolute -left-40 top-20 -z-10 h-80 w-80 rounded-full bg-primary/10 blur-[120px]" />

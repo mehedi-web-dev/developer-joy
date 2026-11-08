@@ -25,8 +25,8 @@ const skillGroups = [
     title: "Frontend Development",
     description: "Modern and responsive user interfaces",
     skills: [
-      "HTML",
-      "CSS",
+      "HTML5",
+      "CSS3",
       "JavaScript",
       "TypeScript",
       "React",
@@ -63,7 +63,7 @@ const SkillsSection = () => {
   return (
     <section
       id="skills"
-      className="relative w-full overflow-hidden bg-background py-24 sm:py-32"
+      className="relative w-full overflow-hidden bg-transparent py-24 sm:py-32"
     >
       {/* Background Effects */}
       <div className="pointer-events-none absolute -left-40 top-20 -z-10 h-80 w-80 rounded-full bg-primary/10 blur-[120px]" />

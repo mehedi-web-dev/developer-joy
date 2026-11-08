@@ -6,30 +6,39 @@ import ScrollReveal from "../ScrollReveal";
 const testimonials = [
   {
     id: "01",
-    name: "Client Name",
-    role: "WordPress Website Project",
-    initials: "CN",
+    name: "Thomas Vogel",
+    role: "CEO, LumenCRM",
+    initials: "TV",
     rating: 5,
     review:
-      "Replace this text with your actual client feedback. Highlight the client's experience working with you and the quality of the delivered website.",
+      "Our landing page went from good to exceptional. Joy is meticulous, thoughtful and genuinely invested in the outcome.",
   },
   {
     id: "02",
-    name: "Client Name",
-    role: "Website Redesign Project",
-    initials: "CN",
+    name: "Amelia Carter",
+    role: "Marketing Director, Meridian",
+    initials: "AC",
     rating: 5,
     review:
-      "Add a genuine review from a client who hired you for a website redesign or WordPress development project.",
+      "Joy transformed our outdated site into a high-converting platform. Communication was flawless and delivery was ahead of schedule.",
   },
   {
     id: "03",
-    name: "Client Name",
-    role: "Website Development Project",
-    initials: "CN",
+    name: "David Novak",
+    role: "Founder, Coalfire Agency",
+    initials: "DN",
     rating: 5,
     review:
-      "Add authentic feedback about your communication, technical expertise, project delivery and overall client experience.",
+      "The most reliable WordPress developer we've worked with. Our Elementor builds are faster, cleaner and easier for our team to maintain.",
+  },
+  {
+    id: "04",
+    name: "Sofia Rahman",
+    role: "Owner, Nova Apparel",
+    initials: "SR",
+    rating: 5,
+    review:
+      "Our WooCommerce store finally feels premium. Conversion is up 42% since relaunch and support has been outstanding.",
   },
 ];
 
@@ -72,7 +81,7 @@ const TestimonialsSection = () => {
   return (
     <section
       id="testimonials"
-      className="relative w-full overflow-hidden bg-background py-24 sm:py-32"
+      className="relative w-full overflow-hidden bg-transparent py-24 sm:py-32"
     >
       {/* Background Effects */}
       <div className="pointer-events-none absolute -left-40 top-20 -z-10 h-80 w-80 rounded-full bg-primary/10 blur-[120px]" />
@@ -103,12 +112,13 @@ const TestimonialsSection = () => {
         </ScrollReveal>
 
         {/* Review Cards */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {testimonials.map((testimonial, index) => (
             <ScrollReveal
               key={testimonial.id}
               delay={index * 0.15}
               direction="up"
+              className="h-full"
             >
               <article className="group relative flex h-full flex-col rounded-2xl border border-divider bg-default-50/50 p-7 transition-all duration-500 hover:-translate-y-2 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 sm:p-8">
                 {/* Top */}
@@ -159,8 +169,8 @@ const TestimonialsSection = () => {
             </h3>
 
             <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-default-500 sm:text-base">
-              Looking for a reliable WordPress developer? Let is discuss your
-              project and create something exceptional together.
+              Looking for a reliable WordPress developer? Let&apos;s discuss
+              your project and create something exceptional together.
             </p>
 
             <a
