@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import nodemailer from "nodemailer";
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,13 +7,34 @@ export async function POST(request: NextRequest) {
 
     const { name, email, subject, service, message } = body;
 
-    // Validate required fields
+    // Validate data types
     if (
-      !name?.trim() ||
-      !email?.trim() ||
-      !subject?.trim() ||
-      !service?.trim() ||
-      !message?.trim()
+      typeof name !== "string" ||
+      typeof email !== "string" ||
+      typeof subject !== "string" ||
+      typeof service !== "string" ||
+      typeof message !== "string"
+    ) {
+      return NextResponse.json(
+        { success: false, message: "Invalid form data." },
+        { status: 400 },
+      );
+    }
+
+    // Clean input
+    const cleanName = name.trim();
+    const cleanEmail = email.trim();
+    const cleanSubject = subject.trim();
+    const cleanService = service.trim();
+    const cleanMessage = message.trim();
+
+    // Required fields
+    if (
+      !cleanName ||
+      !cleanEmail ||
+      !cleanSubject ||
+      !cleanService ||
+      !cleanMessage
     ) {
       return NextResponse.json(
         { success: false, message: "Please fill in all fields." },
@@ -26,7 +45,7 @@ export async function POST(request: NextRequest) {
     // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(cleanEmail)) {
       return NextResponse.json(
         { success: false, message: "Invalid email address." },
         { status: 400 },
@@ -35,51 +54,64 @@ export async function POST(request: NextRequest) {
 
     // Validate field lengths
     if (
-      name.length > 100 ||
-      email.length > 254 ||
-      subject.length > 150 ||
-      message.length < 10 ||
-      message.length > 5000
+      cleanName.length > 100 ||
+      cleanEmail.length > 254 ||
+      cleanSubject.length > 150 ||
+      cleanService.length > 100 ||
+      cleanMessage.length < 10 ||
+      cleanMessage.length > 5000
     ) {
       return NextResponse.json(
-        { success: false, message: "Invalid form data." },
+        { success: false, message: "Please check your form information." },
         { status: 400 },
       );
     }
 
-    if (!process.env.RESEND_API_KEY) {
+    // Environment variables
+    const emailUser = process.env.EMAIL_USER;
+    const emailPass = process.env.EMAIL_PASS;
+
+    if (!emailUser || !emailPass) {
+      console.error("Missing email environment variables.");
+
       return NextResponse.json(
-        { success: false, message: "Email service is not configured." },
+        { success: false, message: "Email configuration is missing." },
         { status: 500 },
       );
     }
 
-    const { error } = await resend.emails.send({
-      from: "DeveloperJoy Contact <onboarding@resend.dev>",
-      to: ["joykhanfiverr@gmail.com"],
-      replyTo: email,
-      subject: `Contact Form: ${subject}`,
-      text: `
-New contact form submission
-
-Name: ${name}
-Email: ${email}
-Service: ${service}
-Subject: ${subject}
-
-Project Details:
-${message}
-      `,
+    // Gmail SMTP
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: emailUser,
+        pass: emailPass,
+      },
     });
 
-    if (error) {
-      console.error("Resend Error:", error);
+    // Verify Gmail connection
+    await transporter.verify();
 
-      return NextResponse.json(
-        { success: false, message: "Unable to send your message." },
-        { status: 500 },
-      );
-    }
+    // Send email
+    await transporter.sendMail({
+      from: `"DeveloperJoy Contact" <${emailUser}>`,
+      to: "mehedihasan958327@gmail.com",
+      replyTo: cleanEmail,
+      subject: `New Contact Message: ${cleanSubject}`,
+      text: `
+New message from your portfolio website.
+
+Name: ${cleanName}
+Email: ${cleanEmail}
+Subject: ${cleanSubject}
+Service: ${cleanService}
+
+Project Details:
+${cleanMessage}
+      `,
+    });
 
     return NextResponse.json(
       {
@@ -89,12 +121,18 @@ ${message}
       { status: 200 },
     );
   } catch (error) {
-    console.error("Contact API Error:", error);
+    console.error("Nodemailer Error:", error);
+
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown email error";
 
     return NextResponse.json(
       {
         success: false,
-        message: "Something went wrong. Please try again later.",
+        message:
+          process.env.NODE_ENV === "development"
+            ? errorMessage
+            : "Failed to send your message. Please try again later.",
       },
       { status: 500 },
     );

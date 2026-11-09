@@ -1,7 +1,14 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { Mail, Phone, MapPin } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronDown,
+  Loader2,
+  Mail,
+  MapPin,
+  Phone,
+} from "lucide-react";
 
 const services = [
   "WordPress Website Design",
@@ -24,6 +31,7 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     setLoading(true);
     setStatus(null);
 
@@ -72,30 +80,46 @@ export default function ContactPage() {
     }
   };
 
+  const inputClass =
+    "w-full min-w-0 rounded-xl border border-divider bg-default-100/60 px-4 py-3 text-sm text-foreground outline-none transition-all placeholder:text-default-400 focus:border-primary focus:bg-default-100 focus:ring-2 focus:ring-primary/20";
+
+  const labelClass = "mb-2 block text-sm font-semibold text-foreground";
+
+  const contactCardClass =
+    "group flex min-w-0 items-center gap-4 rounded-2xl border border-divider bg-default-50/60 p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-default-100/70";
+
   return (
-    <main className="relative min-h-screen overflow-x-clip px-4 py-16 text-foreground sm:px-6 lg:py-24">
-      <div className="relative mx-auto grid w-full max-w-6xl grid-cols-1 items-start gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+    <main className="relative min-h-screen overflow-x-clip px-4 py-16 sm:px-6 lg:py-24">
+      {/* Ambient glows over the site-wide animated background */}
+      <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-primary/10 blur-[120px]" />
+
+      <div className="pointer-events-none absolute -right-40 bottom-0 h-80 w-80 rounded-full bg-secondary/10 blur-[120px]" />
+
+      <div className="relative mx-auto grid w-full max-w-6xl grid-cols-1 items-start gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14">
         {/* Contact Form */}
-        <section className="min-w-0 rounded-[28px] border border-divider bg-default-50/50 p-5 shadow-2xl backdrop-blur-md sm:p-8">
-          <div className="mb-8">
+        <section className="relative min-w-0 overflow-hidden rounded-[28px] border border-divider bg-default-50/70 p-5 shadow-2xl shadow-primary/5 backdrop-blur-xl sm:p-8">
+          <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+
+          <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
+
+          <div className="relative mb-8">
             <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
               Send Me a Message
             </h1>
+
             <p className="mt-2 text-sm text-default-500 sm:text-base">
               Fill out the form and I&apos;ll get back to you.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="relative space-y-5">
             {/* Name and Email */}
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div className="min-w-0">
-                <label
-                  htmlFor="name"
-                  className="mb-2 block text-sm font-semibold text-foreground"
-                >
+                <label htmlFor="name" className={labelClass}>
                   Your Name
                 </label>
+
                 <input
                   id="name"
                   name="name"
@@ -103,17 +127,16 @@ export default function ContactPage() {
                   placeholder="John Doe"
                   required
                   maxLength={100}
-                  className="w-full min-w-0 rounded-xl border border-divider bg-default-100/50 px-3 py-3 text-sm text-foreground outline-none transition placeholder:text-default-400 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  autoComplete="name"
+                  className={inputClass}
                 />
               </div>
 
               <div className="min-w-0">
-                <label
-                  htmlFor="email"
-                  className="mb-2 block text-sm font-semibold text-foreground"
-                >
+                <label htmlFor="email" className={labelClass}>
                   Email Address
                 </label>
+
                 <input
                   id="email"
                   name="email"
@@ -121,19 +144,18 @@ export default function ContactPage() {
                   placeholder="john@example.com"
                   required
                   maxLength={254}
-                  className="w-full min-w-0 rounded-xl border border-divider bg-default-100/50 px-3 py-3 text-sm text-foreground outline-none transition placeholder:text-default-400 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  autoComplete="email"
+                  className={inputClass}
                 />
               </div>
             </div>
 
             {/* Subject */}
             <div>
-              <label
-                htmlFor="subject"
-                className="mb-2 block text-sm font-semibold text-foreground"
-              >
+              <label htmlFor="subject" className={labelClass}>
                 Subject
               </label>
+
               <input
                 id="subject"
                 name="subject"
@@ -141,61 +163,66 @@ export default function ContactPage() {
                 placeholder="How can I help you?"
                 required
                 maxLength={150}
-                className="w-full rounded-xl border border-divider bg-default-100/50 px-3 py-3 text-sm text-foreground outline-none transition placeholder:text-default-400 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className={inputClass}
               />
             </div>
 
             {/* Service */}
             <div>
-              <label
-                htmlFor="service"
-                className="mb-2 block text-sm font-semibold text-foreground"
-              >
+              <label htmlFor="service" className={labelClass}>
                 What do you need?
               </label>
-              <select
-                id="service"
-                name="service"
-                required
-                defaultValue=""
-                className="w-full rounded-xl border border-divider bg-default-100/50 px-3 py-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-              >
-                <option
-                  value=""
-                  disabled
-                  className="bg-background text-foreground"
+
+              <div className="relative">
+                <select
+                  id="service"
+                  name="service"
+                  required
+                  defaultValue=""
+                  className={`${inputClass} appearance-none pr-11`}
                 >
-                  Select a service
-                </option>
-                {services.map((service) => (
                   <option
-                    key={service}
-                    value={service}
+                    value=""
+                    disabled
                     className="bg-background text-foreground"
                   >
-                    {service}
+                    Select a service
                   </option>
-                ))}
-              </select>
+
+                  {services.map((service) => (
+                    <option
+                      key={service}
+                      value={service}
+                      className="bg-background text-foreground"
+                    >
+                      {service}
+                    </option>
+                  ))}
+                </select>
+
+                <ChevronDown
+                  size={18}
+                  aria-hidden="true"
+                  className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-default-400"
+                />
+              </div>
             </div>
 
-            {/* Message */}
+            {/* Project Details */}
             <div>
-              <label
-                htmlFor="message"
-                className="mb-2 block text-sm font-semibold text-foreground"
-              >
+              <label htmlFor="message" className={labelClass}>
                 Project Details
               </label>
+
               <textarea
                 id="message"
                 name="message"
                 rows={6}
-                required
                 minLength={10}
                 maxLength={5000}
+                required
                 placeholder="Tell me about your project..."
-                className="w-full resize-y rounded-xl border border-divider bg-default-100/50 px-3 py-3 text-sm text-foreground outline-none transition placeholder:text-default-400 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className={`${inputClass} resize-y`}
               />
             </div>
 
@@ -203,6 +230,7 @@ export default function ContactPage() {
             {status && (
               <div
                 role="status"
+                aria-live="polite"
                 className={`rounded-xl border p-3 text-sm ${
                   status.type === "success"
                     ? "border-green-500/30 bg-green-500/10 text-green-600 dark:text-green-400"
@@ -213,13 +241,23 @@ export default function ContactPage() {
               </div>
             )}
 
-            {/* Submit */}
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-4 text-sm font-bold text-white shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-4 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-primary/30 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loading ? "Sending..." : "Send Message →"}
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  Send Message
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
             </button>
 
             <p className="text-center text-xs text-default-400">
@@ -229,62 +267,80 @@ export default function ContactPage() {
         </section>
 
         {/* Contact Information */}
-        <aside className="min-w-0 space-y-6 lg:pt-10">
+        <aside className="min-w-0 space-y-8 lg:pt-8">
           <div>
-            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400">
-              Get in Touch
-            </p>
-            <h2 className="text-3xl font-bold leading-tight text-foreground sm:text-4xl">
-              Let&apos;s Build Something Great Together.
+            <span className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">
+              Get In Touch
+            </span>
+
+            <h2 className="mt-3 text-3xl font-bold leading-tight text-foreground sm:text-4xl">
+              Let&apos;s Build Something{" "}
+              <span className="bg-gradient-to-r from-primary via-blue-500 to-purple-500 bg-clip-text text-transparent">
+                Great Together.
+              </span>
             </h2>
+
             <p className="mt-4 leading-7 text-default-500">
               Have a project in mind or need help with your website? Feel free
-              to contact me. I&apos;ll be happy to discuss your project.
+              to reach out. I&apos;d love to hear from you.
             </p>
           </div>
 
-          <div className="space-y-4">
-            <a
-              href="mailto:joykhanfiverr@gmail.com"
-              className="flex min-w-0 items-center gap-4 rounded-2xl border border-divider bg-default-50/50 p-5 transition hover:border-indigo-500/60"
-            >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-sky-400">
-                <Mail size={22} />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-sm text-default-500">Email</span>
-                <span className="break-all font-semibold">
-                  joykhanfiverr@gmail.com
-                </span>
-              </span>
-            </a>
+          {/* Email */}
+          <a href="mailto:mehedihasan958327@gmail.com" className={contactCardClass}>
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
+              <Mail size={22} />
+            </span>
 
-            <a
-              href="tel:+8801610186886"
-              className="flex min-w-0 items-center gap-4 rounded-2xl border border-divider bg-default-50/50 p-5 transition hover:border-indigo-500/60"
-            >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-sky-400">
-                <Phone size={22} />
+            <span className="min-w-0">
+              <span className="block text-sm text-default-500">
+                Email Address
               </span>
-              <span className="min-w-0">
-                <span className="block text-sm text-default-500">Phone</span>
-                <span className="break-words font-semibold">
-                  +8801610186886
-                </span>
-              </span>
-            </a>
 
-            <div className="flex min-w-0 items-center gap-4 rounded-2xl border border-divider bg-default-50/50 p-5">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-sky-400">
-                <MapPin size={22} />
+              <span className="break-all font-semibold text-foreground">
+                mehedihasan958327@gmail.com
               </span>
-              <span className="min-w-0">
-                <span className="block text-sm text-default-500">Location</span>
-                <span className="break-words font-semibold">
-                  Noakhali-3890, Bangladesh
-                </span>
+            </span>
+          </a>
+
+          {/* Phone */}
+          <a href="tel:+8801610186886" className={contactCardClass}>
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
+              <Phone size={22} />
+            </span>
+
+            <span className="min-w-0">
+              <span className="block text-sm text-default-500">Phone Number</span>
+
+              <span className="break-words font-semibold text-foreground">
+                +8801610186886
               </span>
-            </div>
+            </span>
+          </a>
+
+          {/* Location */}
+          <div className={contactCardClass}>
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
+              <MapPin size={22} />
+            </span>
+
+            <span className="min-w-0">
+              <span className="block text-sm text-default-500">Location</span>
+
+              <span className="break-words font-semibold text-foreground">
+                Noakhali-3890, Bangladesh
+              </span>
+            </span>
+          </div>
+
+          {/* Availability */}
+          <div className="flex items-center gap-3 pt-2">
+            <span className="relative flex h-3 w-3">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-50" />
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-green-500" />
+            </span>
+
+            <p className="text-sm text-default-500">Available for new projects</p>
           </div>
         </aside>
       </div>
