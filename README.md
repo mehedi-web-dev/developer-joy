@@ -1,36 +1,173 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DeveloperJoy — Personal Portfolio
 
-## Getting Started
+A modern, responsive, and professional developer portfolio built with Next.js, TypeScript, and Tailwind CSS. Showcasing my skills, services, projects, and experience as a WordPress Developer and Full-Stack Developer.
 
-First, run the development server:
+## 🚀 Live Website
+
+[Visit DeveloperJoy](https://developer-joy.vercel.app/)
+
+## ✨ Features
+
+- Modern and responsive portfolio design
+- Dark-themed user interface
+- Responsive navigation with mobile menu
+- Interactive animations and visual effects
+- Professional hero section
+- About Me and skills section
+- Technology stack showcase
+- Services and expertise section
+- Portfolio and project showcase
+- Client testimonials
+- Frequently Asked Questions (FAQ)
+- Contact form with email integration
+- Gmail SMTP integration using Nodemailer
+- Form validation and submission status
+- SEO-friendly structure
+
+## 🛠️ Tech Stack
+
+**Frontend**
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Lucide React
+
+**Backend & Email**
+- Next.js API Routes
+- Node.js
+- Nodemailer
+- Gmail SMTP
+
+**Development Tools**
+- Git
+- GitHub
+- VS Code
+- npm
+
+## 📁 Project Structure
+
+```text
+developerjoy/
+├── public/
+│   ├── images/
+│   └── icons/
+│
+├── src/
+│   └── app/
+│       ├── api/
+│       │   └── contact/
+│       │       └── route.ts
+│       │
+│       ├── contact/
+│       │   └── page.tsx
+│       │
+│       ├── layout.tsx
+│       ├── page.tsx
+│       └── globals.css
+│
+├── .env.local
+├── .gitignore
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
+## ⚙️ Installation & Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone YOUR_REPOSITORY_URL
+```
+
+### 2. Navigate to the Project
+
+```bash
+cd developerjoy
+```
+
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+### 4. Configure Environment Variables
+
+Create a `.env.local` file in the root directory.
+
+```env
+EMAIL_USER=your-gmail@gmail.com
+EMAIL_PASS=your-google-app-password
+```
+
+**Important:** Use a Google App Password instead of your regular Gmail password.
+
+### 5. Run the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📧 Contact Form Integration
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The contact form uses Next.js API Routes and Nodemailer to send messages through Gmail SMTP.
 
-## Learn More
+**API Endpoint:**
 
-To learn more about Next.js, take a look at the following resources:
+```text
+POST /api/contact
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Form Fields:**
+- Name
+- Email Address
+- Subject
+- Service
+- Project Details
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Features:**
+- Required field validation
+- Email format validation
+- Gmail SMTP authentication
+- Automatic email delivery
+- Reply-to visitor email address
+- Success and error notifications
 
-## Deploy on Vercel
+## 🔐 Environment Variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Variable | Description |
+|---|---|
+| `EMAIL_USER` | Gmail account used to send emails |
+| `EMAIL_PASS` | Google App Password |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Never commit `.env.local` or expose your email credentials in public repositories.
+
+## 📱 Responsive Design
+
+Designed to provide a consistent experience across:
+
+- Desktop computers
+- Laptops
+- Tablets
+- Mobile devices
+
+## 👨‍💻 About Me
+
+I'm a WordPress Developer specializing in Elementor, WooCommerce, custom WordPress development, website redesign, malware removal, and website optimization.
+
+I also work with modern web technologies including React, Next.js, TypeScript, and Tailwind CSS.
+
+## 📬 Contact
+
+- **Email:** jewelsweb7@gmail.com
+- **Phone:** +8801610186886
+- **Location:** Noakhali, Bangladesh
+- **Portfolio:** [developer-joy.vercel.app](https://developer-joy.vercel.app/)
+
+## 📄 License
+
+This project is created for my personal portfolio and professional showcase.
