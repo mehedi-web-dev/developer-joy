@@ -1,19 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  ArrowRightLeft,
   ArrowUpRight,
-  Braces,
-  Bug,
   CheckCircle2,
   ClipboardList,
-  Code2,
-  Gauge,
   LayoutTemplate,
   LifeBuoy,
   LockKeyhole,
   MonitorSmartphone,
-  Palette,
   RefreshCw,
   Rocket,
   Search,
@@ -24,6 +18,9 @@ import {
   Wrench,
 } from "lucide-react";
 import ScrollReveal from "../component/ScrollReveal";
+import { getPublicServices } from "@/lib/server-api";
+import { Service } from "@/types/cms";
+import { getServiceIcon } from "@/lib/service-icons";
 
 export const metadata: Metadata = {
   title: "WordPress Services | Developer Joy",
@@ -54,149 +51,16 @@ const heroItems = [
   },
 ];
 
-const services = [
-  {
-    number: "01",
-    icon: Code2,
-    title: "WordPress Website Development",
-    description:
-      "Custom, scalable WordPress websites built with clean code, responsive layouts, and editor-friendly functionality that helps your business grow.",
-    includes: [
-      "Custom theme and block development",
-      "Responsive, editor-friendly layouts",
-      "Launch-ready performance setup",
-    ],
-    tags: ["WordPress", "Custom Development"],
-  },
-  {
-    number: "02",
-    icon: LayoutTemplate,
-    title: "Elementor Website Design",
-    description:
-      "Beautiful, conversion-focused Elementor and Elementor Pro designs with pixel-perfect layouts, advanced interactions, and reusable templates.",
-    includes: [
-      "Elementor Pro page design",
-      "Reusable templates and global styles",
-      "Responsive interactions and animations",
-    ],
-    tags: ["Elementor", "Elementor Pro"],
-  },
-  {
-    number: "03",
-    icon: ShoppingCart,
-    title: "WooCommerce Development",
-    description:
-      "High-converting online stores with secure checkout, payment integration, product management, and seamless shopping experiences.",
-    includes: [
-      "Store setup and product structure",
-      "Payment and shipping integrations",
-      "Secure, conversion-focused checkout",
-    ],
-    tags: ["WooCommerce", "eCommerce"],
-  },
-  {
-    number: "04",
-    icon: Palette,
-    title: "Website Redesign",
-    description:
-      "Transform an outdated site into a modern, responsive, and professional experience that improves usability, brand perception, and conversions.",
-    includes: [
-      "UX and content review",
-      "Modern visual refresh",
-      "Conversion-focused improvements",
-    ],
-    tags: ["UI/UX", "Redesign"],
-  },
-  {
-    number: "05",
-    icon: ArrowRightLeft,
-    title: "Website Migration",
-    description:
-      "Zero-downtime moves between hosts, domains, or platforms with complete database, media, DNS, and email integrity.",
-    includes: [
-      "Host, domain, or platform moves",
-      "Database, media, and email integrity",
-      "Zero-downtime deployment",
-    ],
-    tags: ["Migration", "cPanel"],
-  },
-  {
-    number: "06",
-    icon: Bug,
-    title: "WordPress Bug Fixing",
-    description:
-      "Fast, decisive fixes for theme, plugin, PHP, and layout issues, including broken checkouts, white screens, and cross-browser problems.",
-    includes: [
-      "Theme and plugin conflict fixes",
-      "PHP, layout, and checkout issues",
-      "Cross-browser testing",
-    ],
-    tags: ["Bug Fixing", "Troubleshooting"],
-  },
-  {
-    number: "07",
-    icon: ShieldCheck,
-    title: "Malware Removal & Security",
-    description:
-      "Remove malicious code, hidden backdoors, and vulnerabilities, then harden your WordPress site with firewalls, backups, and monitoring.",
-    includes: [
-      "Malware and backdoor cleanup",
-      "Firewall, backups, and monitoring",
-      "WordPress security hardening",
-    ],
-    tags: ["Malware Removal", "Security"],
-  },
-  {
-    number: "08",
-    icon: Gauge,
-    title: "Website Speed Optimization",
-    description:
-      "Improve Core Web Vitals with caching, image and database cleanup, script optimization, and performance tuning for faster load times.",
-    includes: [
-      "Core Web Vitals audit",
-      "Caching, images, and database cleanup",
-      "Script and asset optimization",
-    ],
-    tags: ["Performance", "Core Web Vitals"],
-  },
-  {
-    number: "09",
-    icon: Braces,
-    title: "Custom WordPress Development",
-    description:
-      "Custom themes, plugins, post types, fields, and API integrations built to fit your workflow and scale with your business.",
-    includes: [
-      "Custom post types and fields",
-      "Custom plugins and functionality",
-      "API and third-party integrations",
-    ],
-    tags: ["Custom Code", "API Integration"],
-  },
-  {
-    number: "10",
-    icon: LifeBuoy,
-    title: "Website Maintenance & Support",
-    description:
-      "Ongoing care plans covering updates, backups, uptime monitoring, security scans, performance checks, and priority support.",
-    includes: [
-      "Updates, backups, and uptime monitoring",
-      "Security scans and performance checks",
-      "Priority support and monthly reports",
-    ],
-    tags: ["Maintenance", "Support"],
-  },
-];
-
 const includedFeatures = [
   {
     icon: MonitorSmartphone,
     title: "Responsive by default",
     description:
-      "Every layout is built mobile-first and tested across modern devices and screen sizes.",
+      "Crafted mobile-first and tested thoroughly on real phones, tablets, laptops, and desktop screens.",
   },
   {
     icon: SearchCheck,
-    title: "SEO-ready structure",
+    title: "SEO foundations",
     description:
       "Semantic markup, clean heading structure, and on-page SEO fundamentals baked in.",
   },
@@ -249,7 +113,28 @@ const processSteps = [
   },
 ];
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  let services: Service[] = [];
+
+  try {
+    const res = await getPublicServices({ limit: 50 });
+    if (res?.data && Array.isArray(res.data)) {
+      services = res.data
+        .filter((s) => s.status === "published" && s.title)
+        .sort((a, b) => {
+          const orderA = a.displayOrder ?? 0;
+          const orderB = b.displayOrder ?? 0;
+          if (orderA !== orderB) return orderA - orderB;
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        });
+    }
+  } catch (err) {
+    console.error("Failed to load services on /services page:", err);
+    services = [];
+  }
+
   return (
     <main>
       {/* Intro */}
@@ -325,7 +210,7 @@ export default function ServicesPage() {
                     At a glance
                   </span>
                   <span className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
-                    10 services
+                    {services.length > 0 ? `${services.length} services` : "Tailored services"}
                   </span>
                 </div>
 
@@ -410,78 +295,108 @@ export default function ServicesPage() {
             </div>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {services.map((service, index) => {
-              const Icon = service.icon;
+          {services.length === 0 ? (
+            <div className="mx-auto max-w-3xl rounded-3xl border border-dashed border-divider bg-default-50/30 px-6 py-16 text-center">
+              <p className="text-base font-medium text-default-400">
+                Services catalog is currently being updated. Please contact us directly for project inquiries and custom proposals.
+              </p>
+              <Link
+                href="/contact"
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90 transition"
+              >
+                Inquire About Services
+                <ArrowUpRight size={16} />
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {services.map((service, index) => {
+                const Icon = getServiceIcon(service.icon);
+                const itemNumber = (index + 1).toString().padStart(2, "0");
+                const deliverables =
+                  service.deliverables && service.deliverables.length > 0
+                    ? service.deliverables
+                    : [];
+                const tags =
+                  service.technologies && service.technologies.length > 0
+                    ? service.technologies
+                    : service.features && service.features.length > 0
+                    ? service.features
+                    : [];
 
-              return (
-                <ScrollReveal
-                  key={service.number}
-                  delay={(index % 2) * 0.12}
-                  direction="up"
-                  className="h-full"
-                >
-                  <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-divider bg-default-50/50 p-7 transition-all duration-500 hover:-translate-y-2 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 sm:p-8">
-                    <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
+                return (
+                  <ScrollReveal
+                    key={service._id || index}
+                    delay={(index % 2) * 0.12}
+                    direction="up"
+                    className="h-full"
+                  >
+                    <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-divider bg-default-50/50 p-7 transition-all duration-500 hover:-translate-y-2 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 sm:p-8">
+                      <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
 
-                    <div className="relative flex items-center justify-between">
-                      <span className="text-sm font-bold tracking-widest text-default-400">
-                        / {service.number}
-                      </span>
-
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 group-hover:bg-primary group-hover:text-white">
-                        <Icon size={26} />
-                      </div>
-                    </div>
-
-                    <div className="relative mt-7 flex-1">
-                      <h3 className="text-xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary sm:text-2xl">
-                        {service.title}
-                      </h3>
-
-                      <p className="mt-4 text-sm leading-7 text-default-500">
-                        {service.description}
-                      </p>
-
-                      <ul className="mt-5 space-y-2.5">
-                        {service.includes.map((item) => (
-                          <li
-                            key={item}
-                            className="flex items-start gap-2.5 text-sm text-default-500"
-                          >
-                            <CheckCircle2
-                              size={16}
-                              className="mt-0.5 shrink-0 text-primary"
-                            />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="relative mt-6 flex flex-wrap gap-2">
-                      {service.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full border border-divider bg-default-100 px-3 py-1.5 text-xs font-medium text-default-500"
-                        >
-                          {tag}
+                      <div className="relative flex items-center justify-between">
+                        <span className="text-sm font-bold tracking-widest text-default-400">
+                          / {itemNumber}
                         </span>
-                      ))}
-                    </div>
 
-                    <Link
-                      href="/contact"
-                      className="relative mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary transition-all duration-300 group-hover:gap-4"
-                    >
-                      Discuss this service
-                      <ArrowUpRight size={17} />
-                    </Link>
-                  </article>
-                </ScrollReveal>
-              );
-            })}
-          </div>
+                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 group-hover:bg-primary group-hover:text-white">
+                          <Icon size={26} />
+                        </div>
+                      </div>
+
+                      <div className="relative mt-7 flex-1">
+                        <h3 className="text-xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary sm:text-2xl">
+                          {service.title}
+                        </h3>
+
+                        <p className="mt-4 text-sm leading-7 text-default-500">
+                          {service.shortDescription || service.description}
+                        </p>
+
+                        {deliverables.length > 0 && (
+                          <ul className="mt-5 space-y-2.5">
+                            {deliverables.map((item) => (
+                              <li
+                                key={item}
+                                className="flex items-start gap-2.5 text-sm text-default-500"
+                              >
+                                <CheckCircle2
+                                  size={16}
+                                  className="mt-0.5 shrink-0 text-primary"
+                                />
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+
+                      {tags.length > 0 && (
+                        <div className="relative mt-6 flex flex-wrap gap-2">
+                          {tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="rounded-full border border-divider bg-default-100 px-3 py-1.5 text-xs font-medium text-default-500"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      <Link
+                        href="/contact"
+                        className="relative mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary transition-all duration-300 group-hover:gap-4"
+                      >
+                        Discuss this service
+                        <ArrowUpRight size={17} />
+                      </Link>
+                    </article>
+                  </ScrollReveal>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
