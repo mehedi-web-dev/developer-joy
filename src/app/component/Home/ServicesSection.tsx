@@ -13,13 +13,49 @@ interface ServicesSectionProps {
 }
 
 const ServicesSection = ({ initialServices }: ServicesSectionProps) => {
-  const [services, setServices] = useState<Service[]>(initialServices || []);
+  // Helper to prioritize featured services and limit to 3 maximum
+  const processHomepageServices = (rawList: Service[]): Service[] => {
+    const published = rawList.filter(
+      (s) => s.status === "published" && s.title
+    );
+
+    const sortServices = (a: Service, b: Service) => {
+      const orderA = a.displayOrder ?? 0;
+      const orderB = b.displayOrder ?? 0;
+      if (orderA !== orderB) return orderA - orderB;
+      return (
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    };
+
+    const featuredServices = published
+      .filter((s) => Boolean(s.featured))
+      .sort(sortServices);
+
+    const nonFeaturedServices = published
+      .filter((s) => !s.featured)
+      .sort(sortServices);
+
+    const combined: Service[] = [...featuredServices];
+    for (const nonFeatured of nonFeaturedServices) {
+      if (combined.length >= 3) break;
+      if (!combined.some((s) => s._id === nonFeatured._id)) {
+        combined.push(nonFeatured);
+      }
+    }
+
+    return combined.slice(0, 3);
+  };
+
+  const [services, setServices] = useState<Service[]>(() =>
+    initialServices ? processHomepageServices(initialServices) : []
+  );
   const [loading, setLoading] = useState<boolean>(!initialServices);
   const [hasFetched, setHasFetched] = useState<boolean>(Boolean(initialServices));
 
   useEffect(() => {
     if (initialServices && initialServices.length > 0) {
-      setServices(initialServices);
+      setServices(processHomepageServices(initialServices));
       setLoading(false);
       setHasFetched(true);
       return;
@@ -32,18 +68,7 @@ const ServicesSection = ({ initialServices }: ServicesSectionProps) => {
         const res = await getPublicServices({ limit: 50 });
         if (isMounted) {
           if (res?.data && Array.isArray(res.data)) {
-            // Strictly filter published services with a valid title
-            const published = res.data
-              .filter((s) => s.status === "published" && s.title)
-              .sort((a, b) => {
-                const orderA = a.displayOrder ?? 0;
-                const orderB = b.displayOrder ?? 0;
-                if (orderA !== orderB) return orderA - orderB;
-                return (
-                  new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-                );
-              });
-            setServices(published);
+            setServices(processHomepageServices(res.data));
           } else {
             setServices([]);
           }
