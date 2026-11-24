@@ -6,6 +6,7 @@ import { Project, ProjectsResponse, ProjectResponse } from '../types/project';
 import {
   Service,
   ServicesResponse,
+  ServiceResponse,
   Testimonial,
   TestimonialsResponse,
   Faq,
@@ -137,17 +138,58 @@ export async function getServerSession(): Promise<{ user?: AdminUser; session?: 
   }
 }
 
+/** Fetch public services (published only) */
+export async function getPublicServices(params?: {
+  page?: number;
+  limit?: number;
+  featured?: boolean;
+  search?: string;
+}): Promise<ServicesResponse> {
+  const query = new URLSearchParams();
+  if (params?.page) query.append('page', String(params.page));
+  if (params?.limit) query.append('limit', String(params.limit));
+  if (params?.featured !== undefined) query.append('featured', String(params.featured));
+  if (params?.search) query.append('search', params.search);
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/services${query.toString() ? `?${query}` : ''}`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+    next: { revalidate: 60 },
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to fetch services: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as ServicesResponse;
+}
+
+/** Fetch a single public service by ID or slug */
+export async function getPublicServiceByIdOrSlug(idOrSlug: string): Promise<ServiceResponse> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/services/${encodeURIComponent(idOrSlug)}`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+    next: { revalidate: 60 },
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to fetch service ${idOrSlug}: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as ServiceResponse;
+}
+
 /** Fetch admin services (including drafts) */
 export async function getAdminServices(params?: {
   page?: number;
   limit?: number;
   status?: string;
+  featured?: boolean;
   search?: string;
 }): Promise<ServicesResponse> {
   const query = new URLSearchParams();
   if (params?.page) query.append('page', String(params.page));
   if (params?.limit) query.append('limit', String(params.limit));
   if (params?.status) query.append('status', params.status);
+  if (params?.featured !== undefined) query.append('featured', String(params.featured));
   if (params?.search) query.append('search', params.search);
 
   const cookieHeader = await getCookieHeader();
@@ -163,6 +205,61 @@ export async function getAdminServices(params?: {
     throw new ApiError(`Failed to fetch admin services: ${res.status}`, res.status, err);
   }
   return (await res.json()) as ServicesResponse;
+}
+
+/** Create a new service (admin) */
+export async function createAdminService(payload: Partial<Service>): Promise<ServiceResponse> {
+  const cookieHeader = await getCookieHeader();
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/services`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to create service: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as ServiceResponse;
+}
+
+/** Update an existing service (admin) */
+export async function updateAdminService(id: string, payload: Partial<Service>): Promise<ServiceResponse> {
+  const cookieHeader = await getCookieHeader();
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/services/${encodeURIComponent(id)}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to update service ${id}: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as ServiceResponse;
+}
+
+/** Delete a service (admin) */
+export async function deleteAdminService(id: string): Promise<{ success: boolean; message?: string }> {
+  const cookieHeader = await getCookieHeader();
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/services/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+    },
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to delete service ${id}: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as { success: boolean; message?: string };
 }
 
 /** Fetch admin testimonials (including drafts) */

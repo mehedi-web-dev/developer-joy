@@ -1,5 +1,6 @@
 // src/lib/api.ts
 import { Project, ProjectsResponse, ProjectResponse } from '../types/project';
+import { Service, ServicesResponse, ServiceResponse } from '../types/cms';
 
 
 // Base URL from env
@@ -116,6 +117,114 @@ export async function deleteAdminProject(id: string): Promise<{ success: boolean
   if (!res.ok) {
     const err = await res.text();
     throw new ApiError(`Failed to delete project ${id}: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as { success: boolean; message?: string };
+}
+
+export async function getPublicServices(params?: {
+  page?: number;
+  limit?: number;
+  featured?: boolean;
+  search?: string;
+}): Promise<ServicesResponse> {
+  const query = new URLSearchParams();
+  if (params?.page) query.append('page', String(params.page));
+  if (params?.limit) query.append('limit', String(params.limit));
+  if (params?.featured !== undefined) query.append('featured', String(params.featured));
+  if (params?.search) query.append('search', params.search);
+
+  const res = await fetch(`${BASE_URL}/api/services${query.toString() ? `?${query}` : ''}`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to fetch services: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as ServicesResponse;
+}
+
+export async function getPublicServiceById(idOrSlug: string): Promise<ServiceResponse> {
+  const res = await fetch(`${BASE_URL}/api/services/${encodeURIComponent(idOrSlug)}`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to fetch service ${idOrSlug}: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as ServiceResponse;
+}
+
+export async function getAdminServices(params?: {
+  page?: number;
+  limit?: number;
+  status?: string;
+  featured?: boolean;
+  search?: string;
+}): Promise<ServicesResponse> {
+  const query = new URLSearchParams();
+  if (params?.page) query.append('page', String(params.page));
+  if (params?.limit) query.append('limit', String(params.limit));
+  if (params?.status) query.append('status', params.status);
+  if (params?.featured !== undefined) query.append('featured', String(params.featured));
+  if (params?.search) query.append('search', params.search);
+
+  const res = await fetch(`${BASE_URL}/api/admin/services${query.toString() ? `?${query}` : ''}`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to fetch admin services: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as ServicesResponse;
+}
+
+export async function createAdminService(payload: Partial<Service>): Promise<ServiceResponse> {
+  const res = await fetch(`${BASE_URL}/api/admin/services`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to create service: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as ServiceResponse;
+}
+
+export async function updateAdminService(id: string, payload: Partial<Service>): Promise<ServiceResponse> {
+  const res = await fetch(`${BASE_URL}/api/admin/services/${encodeURIComponent(id)}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to update service ${id}: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as ServiceResponse;
+}
+
+export async function deleteAdminService(id: string): Promise<{ success: boolean; message?: string }> {
+  const res = await fetch(`${BASE_URL}/api/admin/services/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    headers: { Accept: 'application/json' },
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to delete service ${id}: ${res.status}`, res.status, err);
   }
   return (await res.json()) as { success: boolean; message?: string };
 }

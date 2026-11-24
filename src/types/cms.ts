@@ -13,6 +13,7 @@ export interface Service extends BaseEntity {
   description: string;
   icon?: string;
   image?: string;
+  deliverables?: string[];
   features?: string[];
   technologies?: string[];
   displayOrder?: number;
