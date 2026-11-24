@@ -35,6 +35,47 @@ async function getCookieHeader(): Promise<string | undefined> {
   }
 }
 
+/** Fetch public projects (published only) */
+export async function getPublicProjects(params?: {
+  page?: number;
+  limit?: number;
+  category?: string;
+  featured?: boolean;
+  search?: string;
+}): Promise<ProjectsResponse> {
+  const query = new URLSearchParams();
+  if (params?.page) query.append('page', String(params.page));
+  if (params?.limit) query.append('limit', String(params.limit));
+  if (params?.category) query.append('category', params.category);
+  if (params?.featured !== undefined) query.append('featured', String(params.featured));
+  if (params?.search) query.append('search', params.search);
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/projects${query.toString() ? `?${query}` : ''}`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+    next: { revalidate: 60 },
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to fetch projects: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as ProjectsResponse;
+}
+
+/** Fetch a single public project by ID or slug */
+export async function getPublicProjectByIdOrSlug(idOrSlug: string): Promise<ProjectResponse> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/projects/${encodeURIComponent(idOrSlug)}`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+    next: { revalidate: 60 },
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to fetch project ${idOrSlug}: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as ProjectResponse;
+}
+
 export async function getAdminProjects(params?: {
   page?: number;
   limit?: number;
