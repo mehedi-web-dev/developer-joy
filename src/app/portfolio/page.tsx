@@ -12,69 +12,19 @@ import {
   Zap,
 } from "lucide-react";
 import ScrollReveal from "../component/ScrollReveal";
+import { getPublicProjects } from "@/lib/server-api";
+import { Project } from "@/types/project";
+
+export type PortfolioProject = Project & {
+  displayOrder?: number;
+  gallery?: string[];
+};
 
 export const metadata: Metadata = {
   title: "Portfolio | Developer Joy",
   description:
     "View selected WordPress and Elementor projects by Developer Joy, including live business websites built for performance, clarity, and growth.",
 };
-
-type Project = {
-  title: string;
-  category: string;
-  description: string;
-  url: string;
-  tags: string[];
-  number: string;
-};
-
-const projects: Project[] = [
-  {
-    number: "01",
-    title: "Bulkon",
-    category: "Business Website",
-    description:
-      "A professional business website built to establish a strong digital presence.",
-    url: "https://bulkon.eu/",
-    tags: ["WordPress", "Elementor"],
-  },
-  {
-    number: "02",
-    title: "BWM Betonwerken",
-    category: "Business Website",
-    description:
-      "A modern business website for a concrete and construction company.",
-    url: "https://bwmbetonwerken.nl/",
-    tags: ["WordPress", "Elementor"],
-  },
-  {
-    number: "03",
-    title: "Sentriq",
-    category: "Business Website",
-    description:
-      "A professional digital presence with a modern and structured website design.",
-    url: "https://sentriq.nl/",
-    tags: ["WordPress", "Elementor"],
-  },
-  {
-    number: "04",
-    title: "RMS Facility Service",
-    category: "Business Website",
-    description:
-      "A business website designed to present facility services professionally.",
-    url: "https://rms-facilityservice.nl/",
-    tags: ["WordPress", "Elementor"],
-  },
-  {
-    number: "05",
-    title: "Nulmetingen Nederland",
-    category: "Business Website",
-    description:
-      "A professional website created to showcase business services and information.",
-    url: "https://nulmetingennederland.nl/",
-    tags: ["WordPress", "Elementor"],
-  },
-];
 
 const standards = [
   {
@@ -103,16 +53,75 @@ const standards = [
   },
 ];
 
-const getDomain = (url: string) =>
-  url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+const getDomain = (url?: string) => {
+  if (!url) return "";
+  return url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+};
 
-export default function PortfolioPage() {
+interface PortfolioPageProps {
+  searchParams?: Promise<{ category?: string }>;
+}
+
+export default async function PortfolioPage({ searchParams }: PortfolioPageProps) {
+  const resolvedParams = searchParams ? await searchParams : {};
+  const selectedCategory = resolvedParams?.category || "All Projects";
+
+  let allProjects: PortfolioProject[] = [];
+
+  try {
+    const res = await getPublicProjects({ limit: 100 });
+    if (res?.data && Array.isArray(res.data)) {
+      const published = res.data.filter(
+        (p) => p.status === "published" && p.title
+      );
+
+      const sortProjects = (a: PortfolioProject, b: PortfolioProject) => {
+        const orderA = a.displayOrder ?? 0;
+        const orderB = b.displayOrder ?? 0;
+        if (orderA !== orderB) return orderA - orderB;
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      };
+
+      const featured = published
+        .filter((p) => Boolean(p.featured))
+        .sort(sortProjects);
+
+      const nonFeatured = published
+        .filter((p) => !p.featured)
+        .sort(sortProjects);
+
+      const combined: PortfolioProject[] = [...featured];
+      for (const item of nonFeatured) {
+        if (!combined.some((p) => p._id === item._id)) {
+          combined.push(item);
+        }
+      }
+
+      allProjects = combined;
+    }
+  } catch (err) {
+    console.error("Failed to load projects on /portfolio page:", err);
+    allProjects = [];
+  }
+
+  // Dynamic categories
+  const uniqueCategories = Array.from(
+    new Set(allProjects.map((p) => p.category).filter(Boolean))
+  );
+  const categories = ["All Projects", ...uniqueCategories];
+
+  const displayedProjects =
+    selectedCategory === "All Projects"
+      ? allProjects
+      : allProjects.filter((p) => p.category === selectedCategory);
+
   return (
     <main>
       {/* Intro */}
       <section className="relative w-full overflow-hidden bg-transparent py-16 sm:py-24">
         <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-primary/10 blur-[120px]" />
-
         <div className="pointer-events-none absolute -right-40 bottom-0 h-80 w-80 rounded-full bg-secondary/10 blur-[120px]" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -160,7 +169,7 @@ export default function PortfolioPage() {
                 <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs font-medium text-default-500 sm:text-sm lg:justify-start">
                   <span className="inline-flex items-center gap-2">
                     <Globe size={16} className="text-primary" />
-                    {projects.length} live websites
+                    {allProjects.length} live websites
                   </span>
                   <span className="inline-flex items-center gap-2">
                     <CheckCircle2 size={16} className="text-primary" />
@@ -181,7 +190,7 @@ export default function PortfolioPage() {
                     Live project index
                   </span>
                   <span className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
-                    {projects.length} websites
+                    {allProjects.length} websites
                   </span>
                 </div>
 
@@ -190,35 +199,48 @@ export default function PortfolioPage() {
                 </h2>
 
                 <div className="mt-6 space-y-3">
-                  {projects.map((project) => (
-                    <Link
-                      key={project.number}
-                      href={project.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex items-center justify-between gap-4 rounded-2xl border border-divider bg-background p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
-                    >
-                      <div className="flex min-w-0 items-center gap-3">
-                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-xs font-bold text-primary">
-                          {project.number}
-                        </span>
+                  {allProjects.length > 0 ? (
+                    allProjects.slice(0, 6).map((project, index) => {
+                      const itemNumber = String(index + 1).padStart(2, "0");
+                      const targetUrl = project.liveUrl || "#projects";
+                      const isExternal = Boolean(project.liveUrl);
 
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
-                            {project.title}
-                          </p>
-                          <p className="mt-0.5 text-xs text-default-500">
-                            {project.category}
-                          </p>
-                        </div>
-                      </div>
+                      return (
+                        <Link
+                          key={project._id || index}
+                          href={targetUrl}
+                          {...(isExternal
+                            ? { target: "_blank", rel: "noopener noreferrer" }
+                            : {})}
+                          className="group flex items-center justify-between gap-4 rounded-2xl border border-divider bg-background p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
+                        >
+                          <div className="flex min-w-0 items-center gap-3">
+                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-xs font-bold text-primary">
+                              {itemNumber}
+                            </span>
 
-                      <ArrowUpRight
-                        size={18}
-                        className="shrink-0 text-default-400 transition-colors group-hover:text-primary"
-                      />
-                    </Link>
-                  ))}
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
+                                {project.title}
+                              </p>
+                              <p className="mt-0.5 text-xs text-default-500">
+                                {project.category}
+                              </p>
+                            </div>
+                          </div>
+
+                          <ArrowUpRight
+                            size={18}
+                            className="shrink-0 text-default-400 transition-colors group-hover:text-primary"
+                          />
+                        </Link>
+                      );
+                    })
+                  ) : (
+                    <div className="rounded-2xl border border-dashed border-divider bg-background/50 p-6 text-center text-xs text-default-400">
+                      No live projects currently listed.
+                    </div>
+                  )}
                 </div>
 
                 <p className="mt-4 text-xs text-default-400">
@@ -259,121 +281,194 @@ export default function PortfolioPage() {
             </div>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project, index) => (
-              <ScrollReveal
-                key={project.number}
-                delay={(index % 3) * 0.1}
-                direction="up"
-                className="h-full"
-              >
-                <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-divider bg-default-50/50 transition-all duration-500 hover:-translate-y-2 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/5">
-                  {/* Project Preview */}
-                  <div className="relative aspect-[16/11] overflow-hidden bg-gradient-to-br from-default-200 via-default-100 to-primary/10 p-5 sm:p-6">
-                    <div className="relative flex h-full flex-col overflow-hidden rounded-xl border border-divider bg-background shadow-xl transition-transform duration-700 group-hover:scale-[1.03]">
-                      {/* Browser Header */}
-                      <div className="flex h-9 shrink-0 items-center gap-1.5 border-b border-divider bg-default-100 px-3">
-                        <span className="h-2 w-2 rounded-full bg-red-400" />
-                        <span className="h-2 w-2 rounded-full bg-yellow-400" />
-                        <span className="h-2 w-2 rounded-full bg-green-400" />
+          {/* Dynamic Category Filter */}
+          {categories.length > 1 && (
+            <ScrollReveal delay={0.1}>
+              <div className="mb-12 flex flex-wrap items-center justify-center gap-3">
+                {categories.map((category) => {
+                  const isActive = selectedCategory === category;
+                  const href =
+                    category === "All Projects"
+                      ? "/portfolio#projects"
+                      : `/portfolio?category=${encodeURIComponent(category)}#projects`;
 
-                        <div className="ml-3 flex min-w-0 flex-1 items-center gap-1.5 rounded-md bg-default-200 px-2 py-1">
-                          <LockKeyhole
-                            size={10}
-                            className="shrink-0 text-success"
-                          />
-                          <span className="truncate text-[10px] font-medium text-default-500">
-                            {getDomain(project.url)}
+                  return (
+                    <Link
+                      key={category}
+                      href={href}
+                      scroll={false}
+                      className={`rounded-full border px-5 py-2.5 text-sm font-semibold transition-all duration-300 ${
+                        isActive
+                          ? "border-primary bg-primary text-white shadow-lg shadow-primary/20"
+                          : "border-divider bg-default-100/50 text-default-500 hover:border-primary/40 hover:text-primary"
+                      }`}
+                    >
+                      {category}
+                    </Link>
+                  );
+                })}
+              </div>
+            </ScrollReveal>
+          )}
+
+          {/* Projects Grid */}
+          <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
+            {displayedProjects.length > 0 ? (
+              displayedProjects.map((project, index) => {
+                const itemNumber = String(index + 1).padStart(2, "0");
+                const domain = getDomain(project.liveUrl);
+                const description = project.shortDescription || project.description;
+                const tags = Array.isArray(project.technologies) ? project.technologies : [];
+
+                return (
+                  <ScrollReveal
+                    key={project._id || index}
+                    delay={(index % 3) * 0.1}
+                    direction="up"
+                    className="h-full"
+                  >
+                    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-divider bg-default-50/50 transition-all duration-500 hover:-translate-y-2 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/5">
+                      {/* Project Preview */}
+                      <div className="relative aspect-[16/11] overflow-hidden bg-gradient-to-br from-default-200 via-default-100 to-primary/10 p-5 sm:p-6">
+                        <div className="relative flex h-full flex-col overflow-hidden rounded-xl border border-divider bg-background shadow-xl transition-transform duration-700 group-hover:scale-[1.03]">
+                          {/* Browser Header */}
+                          <div className="flex h-9 shrink-0 items-center gap-1.5 border-b border-divider bg-default-100 px-3">
+                            <span className="h-2 w-2 rounded-full bg-red-400" />
+                            <span className="h-2 w-2 rounded-full bg-yellow-400" />
+                            <span className="h-2 w-2 rounded-full bg-green-400" />
+
+                            <div className="ml-3 flex min-w-0 flex-1 items-center gap-1.5 rounded-md bg-default-200 px-2 py-1">
+                              <LockKeyhole
+                                size={10}
+                                className="shrink-0 text-success"
+                              />
+                              <span className="truncate text-[10px] font-medium text-default-500">
+                                {domain || project.slug || "website"}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Website Preview */}
+                          {project.thumbnail ? (
+                            <div className="relative flex-1 overflow-hidden bg-default-100">
+                              <img
+                                src={project.thumbnail}
+                                alt={project.title}
+                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                              />
+                            </div>
+                          ) : (
+                            <div className="flex flex-1 flex-col items-center justify-center gap-3 bg-gradient-to-br from-primary/10 via-background to-secondary/10 p-4 text-center">
+                              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+                                {project.category}
+                              </span>
+
+                              <h3 className="text-xl font-extrabold tracking-tight text-foreground sm:text-2xl line-clamp-2 px-2">
+                                {project.title}
+                              </h3>
+
+                              <div className="h-1 w-12 rounded-full bg-primary" />
+
+                              <span className="text-xs text-default-400">
+                                Live Website
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Project Number */}
+                        <div className="absolute right-8 top-8 rounded-lg border border-white/20 bg-background/80 px-3 py-1.5 text-xs font-bold text-foreground shadow-lg backdrop-blur-md">
+                          {itemNumber}
+                        </div>
+
+                        {/* Hover Overlay */}
+                        {project.liveUrl && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-primary/10 opacity-0 backdrop-blur-[2px] transition-opacity duration-500 group-hover:opacity-100">
+                            <Link
+                              href={project.liveUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={`Visit ${project.title} website`}
+                              className="flex h-12 w-12 scale-75 items-center justify-center rounded-full bg-primary text-white shadow-xl transition-transform duration-500 group-hover:scale-100"
+                            >
+                              <ArrowUpRight size={22} />
+                            </Link>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Project Details */}
+                      <div className="flex flex-1 flex-col p-6 sm:p-7">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <span className="text-xs font-semibold uppercase tracking-widest text-primary">
+                              {project.category}
+                            </span>
+
+                            <h3 className="mt-2 text-xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary">
+                              {project.title}
+                            </h3>
+                          </div>
+
+                          <span className="text-sm font-bold text-default-400">
+                            {itemNumber}
                           </span>
                         </div>
+
+                        {description && (
+                          <p className="mt-4 text-sm leading-7 text-default-500 line-clamp-3">
+                            {description}
+                          </p>
+                        )}
+
+                        {tags.length > 0 && (
+                          <div className="mt-5 flex flex-wrap gap-2">
+                            {tags.map((tag) => (
+                              <span
+                                key={tag}
+                                className="rounded-lg border border-divider bg-default-100 px-3 py-1.5 text-xs font-medium text-default-500"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {project.liveUrl ? (
+                          <Link
+                            href={project.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-auto flex items-center justify-between border-t border-divider pt-5 text-sm font-semibold text-foreground transition-colors hover:text-primary"
+                          >
+                            View Live Website
+                            <ArrowUpRight
+                              size={18}
+                              className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                            />
+                          </Link>
+                        ) : (
+                          <div className="mt-auto flex items-center justify-between border-t border-divider pt-5 text-sm font-semibold text-default-400">
+                            <span>Website In Production</span>
+                            <span className="text-xs font-normal">Coming Soon</span>
+                          </div>
+                        )}
                       </div>
-
-                      {/* Website Preview */}
-                      <div className="flex flex-1 flex-col items-center justify-center gap-3 bg-gradient-to-br from-primary/10 via-background to-secondary/10 p-4 text-center">
-                        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-                          {project.category}
-                        </span>
-
-                        <h3 className="text-xl font-extrabold tracking-tight text-foreground sm:text-2xl">
-                          {project.title}
-                        </h3>
-
-                        <div className="h-1 w-12 rounded-full bg-primary" />
-
-                        <span className="text-xs text-default-400">
-                          Live Website
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Project Number */}
-                    <div className="absolute right-8 top-8 rounded-lg border border-white/20 bg-background/80 px-3 py-1.5 text-xs font-bold text-foreground shadow-lg backdrop-blur-md">
-                      {project.number}
-                    </div>
-
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-primary/10 opacity-0 backdrop-blur-[2px] transition-opacity duration-500 group-hover:opacity-100">
-                      <Link
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`Visit ${project.title} website`}
-                        className="flex h-12 w-12 scale-75 items-center justify-center rounded-full bg-primary text-white shadow-xl transition-transform duration-500 group-hover:scale-100"
-                      >
-                        <ArrowUpRight size={22} />
-                      </Link>
-                    </div>
-                  </div>
-
-                  {/* Project Details */}
-                  <div className="flex flex-1 flex-col p-6 sm:p-7">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <span className="text-xs font-semibold uppercase tracking-widest text-primary">
-                          {project.category}
-                        </span>
-
-                        <h3 className="mt-2 text-xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary">
-                          {project.title}
-                        </h3>
-                      </div>
-
-                      <span className="text-sm font-bold text-default-400">
-                        {project.number}
-                      </span>
-                    </div>
-
-                    <p className="mt-4 text-sm leading-7 text-default-500">
-                      {project.description}
-                    </p>
-
-                    <div className="mt-5 flex flex-wrap gap-2">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-lg border border-divider bg-default-100 px-3 py-1.5 text-xs font-medium text-default-500"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    <Link
-                      href={project.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-auto flex items-center justify-between border-t border-divider pt-5 text-sm font-semibold text-foreground transition-colors hover:text-primary"
-                    >
-                      View Live Website
-                      <ArrowUpRight
-                        size={18}
-                        className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-                      />
-                    </Link>
-                  </div>
-                </article>
-              </ScrollReveal>
-            ))}
+                    </article>
+                  </ScrollReveal>
+                );
+              })
+            ) : (
+              <div className="col-span-full rounded-2xl border border-dashed border-divider bg-default-50/30 p-12 text-center">
+                <p className="text-sm font-medium text-default-400">
+                  No published projects found
+                  {selectedCategory !== "All Projects"
+                    ? ` in "${selectedCategory}"`
+                    : ""}
+                  . Check back soon or contact us directly.
+                </p>
+              </div>
+            )}
 
             {/* CTA Card */}
             <ScrollReveal delay={0.2} direction="up" className="h-full">
