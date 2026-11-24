@@ -4,6 +4,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import ImageUpload from "@/app/admin/components/ImageUpload";
 import {
   User,
   ShieldCheck,
@@ -491,22 +492,16 @@ export default function ProfileClient({
                 </p>
               </div>
 
-              {/* Avatar URL */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center justify-between">
-                  <span>Avatar Image URL</span>
-                  <span className="text-[10px] text-slate-500 font-normal">Optional</span>
-                </label>
-                <input
-                  type="url"
+              {/* Avatar Upload & URL */}
+              <div className="pt-1">
+                <ImageUpload
+                  label="Avatar Image"
                   value={image}
-                  onChange={(e) => setImage(e.target.value)}
+                  onChange={(url) => setImage(url)}
                   placeholder="https://example.com/avatar.jpg"
-                  className="w-full rounded-xl border border-slate-800 bg-slate-900/80 px-3.5 py-2.5 text-xs text-slate-200 placeholder-slate-600 focus:border-[#0D8BFF] focus:outline-none focus:ring-1 focus:ring-[#0D8BFF] transition"
+                  helperText="Upload a profile photo (max 5 MB) or enter a direct image URL. Leave blank to use your initial monogram."
+                  aspectRatio="avatar"
                 />
-                <p className="text-[11px] text-slate-500 mt-1">
-                  Direct link to a public image (PNG, JPG, WebP). Leave blank to use your initial monogram.
-                </p>
               </div>
 
               <div className="pt-2">

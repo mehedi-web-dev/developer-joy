@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { updateAdminService, deleteAdminService } from "@/lib/api";
 import { Service } from "@/types/cms";
 import Link from "next/link";
+import ImageUpload from "@/app/admin/components/ImageUpload";
 import {
   ArrowLeft,
   Save,
@@ -617,52 +618,25 @@ export default function EditForm({ service }: EditFormProps) {
           </div>
 
           {/* Image & Preview Card */}
-          <div className="rounded-2xl border border-slate-800/80 bg-[#0B0F19]/90 p-5 space-y-4 shadow-sm">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <ImageIcon size={16} className="text-[#0D8BFF]" />
-              <span>Service Banner / Image</span>
-            </h3>
-
-            {/* Live Image Preview */}
-            <div className="relative h-44 w-full rounded-xl border border-slate-800 bg-slate-900 overflow-hidden flex items-center justify-center">
-              {image && isValidUrl(image) ? (
-                <img
-                  src={image}
-                  alt="Service preview"
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLElement).style.display = "none";
-                  }}
-                />
-              ) : (
-                <div className="flex flex-col items-center justify-center text-slate-500 text-center p-4">
-                  <Layers size={36} className="text-slate-600 mb-1" />
-                  <span className="text-xs font-medium">Image Preview</span>
-                  <span className="text-[10px] text-slate-600">Enter a valid URL below</span>
-                </div>
-              )}
-            </div>
-
-            {/* Image URL Input */}
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
-                Image URL (Optional)
-              </label>
-              <input
-                type="url"
-                placeholder="https://images.unsplash.com/..."
-                className={`w-full rounded-xl border bg-slate-900/80 px-3.5 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none transition-colors ${
-                  errors.image
-                    ? "border-rose-500 focus:border-rose-500"
-                    : "border-slate-800 focus:border-[#0D8BFF]"
-                }`}
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-              />
-              {errors.image && (
-                <p className="mt-1 text-[11px] text-rose-400">{errors.image}</p>
-              )}
-            </div>
+          <div className="rounded-2xl border border-slate-800/80 bg-[#0B0F19]/90 p-5 sm:p-6 shadow-sm">
+            <ImageUpload
+              label="Service Banner / Image"
+              value={image}
+              onChange={(url) => {
+                setImage(url);
+                if (errors.image) {
+                  setErrors((prev) => {
+                    const next = { ...prev };
+                    delete next.image;
+                    return next;
+                  });
+                }
+              }}
+              error={errors.image}
+              placeholder="https://images.unsplash.com/..."
+              helperText="Upload a JPEG, PNG, or WEBP service banner (max 5 MB) or enter a direct image URL."
+              aspectRatio="video"
+            />
           </div>
 
           {/* Icon Selector Card */}

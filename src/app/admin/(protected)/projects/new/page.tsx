@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createAdminProject } from "@/lib/api";
 import Link from "next/link";
+import ImageUpload from "@/app/admin/components/ImageUpload";
 import {
   ArrowLeft,
   Plus,
@@ -487,61 +488,26 @@ export default function NewProjectPage() {
         {/* Right Column: Media, Settings, Links */}
         <div className="space-y-6">
           {/* Thumbnail & Image Preview Card */}
-          <div className="rounded-2xl border border-slate-800/80 bg-[#0B0F19]/90 p-5 sm:p-6 shadow-sm space-y-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
-              <ImageIcon size={16} className="text-[#0D8BFF]" />
-              <span>Project Thumbnail</span>
-            </h3>
-
-            {/* Live Image Preview */}
-            <div className="relative aspect-video w-full rounded-xl border border-slate-800 bg-slate-900/90 overflow-hidden flex items-center justify-center group">
-              {thumbnail.trim() ? (
-                <img
-                  src={thumbnail.trim()}
-                  alt="Thumbnail preview"
-                  className="h-full w-full object-cover transition-transform group-hover:scale-105 duration-300"
-                  onError={(e) => {
-                    (e.target as HTMLElement).style.display = "none";
-                  }}
-                />
-              ) : null}
-
-              {!thumbnail.trim() && (
-                <div className="flex flex-col items-center justify-center text-slate-500 p-4 text-center">
-                  <ImageIcon size={32} className="mb-2 text-slate-600" />
-                  <span className="text-xs font-semibold text-slate-400">
-                    Live Thumbnail Preview
-                  </span>
-                  <span className="text-[10px] text-slate-600 mt-0.5">
-                    Enter image URL below to render preview
-                  </span>
-                </div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
-                Thumbnail Image URL <span className="text-rose-400">*</span>
-              </label>
-              <input
-                type="url"
-                placeholder="https://images.unsplash.com/..."
-                className={`w-full rounded-xl border bg-slate-900/80 px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none transition-colors ${
-                  errors.thumbnail
-                    ? "border-rose-500 focus:border-rose-500"
-                    : "border-slate-800 focus:border-[#0D8BFF]"
-                }`}
-                value={thumbnail}
-                onChange={(e) => setThumbnail(e.target.value)}
-              />
-              {errors.thumbnail && (
-                <p className="mt-1 text-[11px] text-rose-400">{errors.thumbnail}</p>
-              )}
-              <p className="mt-1.5 text-[10px] text-slate-500 flex items-center gap-1">
-                <Info size={11} />
-                <span>Must be a valid HTTP or HTTPS image URL</span>
-              </p>
-            </div>
+          <div className="rounded-2xl border border-slate-800/80 bg-[#0B0F19]/90 p-5 sm:p-6 shadow-sm">
+            <ImageUpload
+              label="Project Thumbnail"
+              value={thumbnail}
+              onChange={(url) => {
+                setThumbnail(url);
+                if (errors.thumbnail) {
+                  setErrors((prev) => {
+                    const next = { ...prev };
+                    delete next.thumbnail;
+                    return next;
+                  });
+                }
+              }}
+              required
+              error={errors.thumbnail}
+              placeholder="https://images.unsplash.com/..."
+              helperText="Upload a JPEG, PNG, or WEBP image (max 5 MB) or enter a direct image URL."
+              aspectRatio="video"
+            />
           </div>
 
           {/* Publication Status & Visibility Card */}

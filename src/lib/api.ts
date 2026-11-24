@@ -461,6 +461,93 @@ export async function deleteAdminFaq(id: string): Promise<{ success: boolean; me
   return (await res.json()) as { success: boolean; message?: string };
 }
 
+export interface UploadImageData {
+  id?: string;
+  url: string;
+  displayUrl?: string;
+  deleteUrl?: string;
+  width?: number;
+  height?: number;
+  size?: number;
+  mimeType?: string;
+  extension?: string;
+  thumb?: { url: string } | null;
+  medium?: { url: string } | null;
+}
+
+export interface UploadImageResponse {
+  success: boolean;
+  message: string;
+  data: UploadImageData;
+  error?: string;
+}
+
+/**
+ * Upload an image file to ImgBB via the backend admin upload endpoint.
+ * POST /api/admin/uploads/images
+ *
+ * Requirements:
+ * - Content-Type: multipart/form-data (browser auto-sets boundary)
+ * - Field name: "image"
+ * - Credentials included for admin session authentication
+ * - Handles 400, 401, 403, 502 and network failures cleanly
+ *
+ * @param file The image file (JPEG, PNG, WEBP, max 5MB)
+ * @returns Promise<UploadImageResponse>
+ */
+export async function uploadAdminImage(file: File): Promise<UploadImageResponse> {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  let res: Response;
+  try {
+    res = await fetch(`${BASE_URL}/api/admin/uploads/images`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+      },
+      body: formData,
+      credentials: 'include',
+    });
+  } catch (netErr: any) {
+    throw new ApiError(
+      'Network error: Unable to connect to upload server. Please verify your connection.',
+      0,
+      netErr?.message
+    );
+  }
+
+  let body: any;
+  try {
+    body = await res.json();
+  } catch {
+    const rawText = await res.text().catch(() => '');
+    throw new ApiError(
+      res.status === 502
+        ? 'Image storage provider is unreachable. Please try again later.'
+        : `Upload failed with HTTP ${res.status}`,
+      res.status,
+      rawText
+    );
+  }
+
+  if (!res.ok || !body?.success) {
+    let errorMessage = body?.message || `Upload failed with status ${res.status}`;
+    if (res.status === 401) {
+      errorMessage = 'Session expired or unauthenticated. Please log in again.';
+    } else if (res.status === 403) {
+      errorMessage = 'Access denied: You do not have administrator permissions.';
+    } else if (res.status === 400 && body?.message) {
+      errorMessage = body.message;
+    } else if (res.status === 502) {
+      errorMessage = body?.message || 'Storage provider communication error. Please try again.';
+    }
+    throw new ApiError(errorMessage, res.status, body?.error || JSON.stringify(body));
+  }
+
+  return body as UploadImageResponse;
+}
+
 export class ApiError extends Error {
   status: number;
   details?: string;

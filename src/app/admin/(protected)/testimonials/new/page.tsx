@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createAdminTestimonial } from "@/lib/api";
 import Link from "next/link";
+import ImageUpload from "@/app/admin/components/ImageUpload";
 import {
   ArrowLeft,
   Plus,
@@ -480,55 +481,25 @@ export default function NewTestimonialPage() {
           </div>
 
           {/* Photo & Preview Card */}
-          <div className="rounded-2xl border border-slate-800/80 bg-[#0B0F19]/90 p-5 space-y-4 shadow-sm">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <ImageIcon size={16} className="text-[#0D8BFF]" />
-              <span>Client Photo</span>
-            </h3>
-
-            {/* Live Photo Preview */}
-            <div className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-800 bg-slate-900/80">
-              <div className="h-20 w-20 rounded-full border-2 border-slate-800 bg-slate-800/80 overflow-hidden flex items-center justify-center text-slate-400 font-bold shrink-0 mb-2">
-                {photo && isValidUrl(photo) ? (
-                  <img
-                    src={photo}
-                    alt="Client preview"
-                    className="h-full w-full object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLElement).style.display = "none";
-                    }}
-                  />
-                ) : (
-                  <span className="text-xl font-bold text-slate-400">
-                    {clientName ? clientName.charAt(0).toUpperCase() : <User size={28} />}
-                  </span>
-                )}
-              </div>
-              <span className="text-[11px] text-slate-400">
-                {clientName || "Client Name"}
-              </span>
-            </div>
-
-            {/* Photo URL Input */}
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
-                Photo URL (Optional)
-              </label>
-              <input
-                type="url"
-                placeholder="https://images.unsplash.com/..."
-                className={`w-full rounded-xl border bg-slate-900/80 px-3.5 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none transition-colors ${
-                  errors.photo
-                    ? "border-rose-500 focus:border-rose-500"
-                    : "border-slate-800 focus:border-[#0D8BFF]"
-                }`}
-                value={photo}
-                onChange={(e) => setPhoto(e.target.value)}
-              />
-              {errors.photo && (
-                <p className="mt-1 text-[11px] text-rose-400">{errors.photo}</p>
-              )}
-            </div>
+          <div className="rounded-2xl border border-slate-800/80 bg-[#0B0F19]/90 p-5 sm:p-6 shadow-sm">
+            <ImageUpload
+              label="Client Photo"
+              value={photo}
+              onChange={(url) => {
+                setPhoto(url);
+                if (errors.photo) {
+                  setErrors((prev) => {
+                    const next = { ...prev };
+                    delete next.photo;
+                    return next;
+                  });
+                }
+              }}
+              error={errors.photo}
+              placeholder="https://images.unsplash.com/..."
+              helperText="Upload a JPEG, PNG, or WEBP client photo (max 5 MB) or enter a direct image URL."
+              aspectRatio="avatar"
+            />
           </div>
         </div>
       </form>
