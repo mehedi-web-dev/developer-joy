@@ -1,6 +1,13 @@
 // src/lib/api.ts
 import { Project, ProjectsResponse, ProjectResponse } from '../types/project';
-import { Service, ServicesResponse, ServiceResponse } from '../types/cms';
+import {
+  Service,
+  ServicesResponse,
+  ServiceResponse,
+  Testimonial,
+  TestimonialsResponse,
+  TestimonialResponse,
+} from '../types/cms';
 
 
 // Base URL from env
@@ -225,6 +232,114 @@ export async function deleteAdminService(id: string): Promise<{ success: boolean
   if (!res.ok) {
     const err = await res.text();
     throw new ApiError(`Failed to delete service ${id}: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as { success: boolean; message?: string };
+}
+
+export async function getPublicTestimonials(params?: {
+  page?: number;
+  limit?: number;
+  featured?: boolean;
+  search?: string;
+}): Promise<TestimonialsResponse> {
+  const query = new URLSearchParams();
+  if (params?.page) query.append('page', String(params.page));
+  if (params?.limit) query.append('limit', String(params.limit));
+  if (params?.featured !== undefined) query.append('featured', String(params.featured));
+  if (params?.search) query.append('search', params.search);
+
+  const res = await fetch(`${BASE_URL}/api/testimonials${query.toString() ? `?${query}` : ''}`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to fetch testimonials: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as TestimonialsResponse;
+}
+
+export async function getPublicTestimonialById(id: string): Promise<TestimonialResponse> {
+  const res = await fetch(`${BASE_URL}/api/testimonials/${encodeURIComponent(id)}`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to fetch testimonial ${id}: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as TestimonialResponse;
+}
+
+export async function getAdminTestimonials(params?: {
+  page?: number;
+  limit?: number;
+  status?: string;
+  featured?: boolean;
+  search?: string;
+}): Promise<TestimonialsResponse> {
+  const query = new URLSearchParams();
+  if (params?.page) query.append('page', String(params.page));
+  if (params?.limit) query.append('limit', String(params.limit));
+  if (params?.status) query.append('status', params.status);
+  if (params?.featured !== undefined) query.append('featured', String(params.featured));
+  if (params?.search) query.append('search', params.search);
+
+  const res = await fetch(`${BASE_URL}/api/admin/testimonials${query.toString() ? `?${query}` : ''}`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to fetch admin testimonials: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as TestimonialsResponse;
+}
+
+export async function createAdminTestimonial(payload: Partial<Testimonial>): Promise<TestimonialResponse> {
+  const res = await fetch(`${BASE_URL}/api/admin/testimonials`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to create testimonial: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as TestimonialResponse;
+}
+
+export async function updateAdminTestimonial(id: string, payload: Partial<Testimonial>): Promise<TestimonialResponse> {
+  const res = await fetch(`${BASE_URL}/api/admin/testimonials/${encodeURIComponent(id)}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to update testimonial ${id}: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as TestimonialResponse;
+}
+
+export async function deleteAdminTestimonial(id: string): Promise<{ success: boolean; message?: string }> {
+  const res = await fetch(`${BASE_URL}/api/admin/testimonials/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    headers: { Accept: 'application/json' },
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to delete testimonial ${id}: ${res.status}`, res.status, err);
   }
   return (await res.json()) as { success: boolean; message?: string };
 }
