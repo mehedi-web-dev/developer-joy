@@ -499,9 +499,16 @@ export async function uploadAdminImage(file: File): Promise<UploadImageResponse>
   const formData = new FormData();
   formData.append('image', file);
 
+  // In the browser, strictly target the first-party same-origin proxy to ensure
+  // first-party HttpOnly session cookies are transmitted automatically.
+  const uploadUrl =
+    typeof window !== 'undefined'
+      ? '/api/admin/uploads/images'
+      : `${BASE_URL}/api/admin/uploads/images`;
+
   let res: Response;
   try {
-    res = await fetch(`${BASE_URL}/api/admin/uploads/images`, {
+    res = await fetch(uploadUrl, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
