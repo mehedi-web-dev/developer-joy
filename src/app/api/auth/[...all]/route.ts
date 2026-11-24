@@ -32,7 +32,7 @@ async function proxyAuthRequest(req: NextRequest) {
     redirect: "manual",
   };
 
-  if (req.method !== "GET" && req.method !== "HEAD") {
+  if (req.method !== "GET" && req.method !== "HEAD" && req.method !== "OPTIONS") {
     try {
       init.body = await req.arrayBuffer();
     } catch {
@@ -44,21 +44,47 @@ async function proxyAuthRequest(req: NextRequest) {
   try {
     backendRes = await fetch(targetUrl, init);
   } catch (err: any) {
-    console.error(`[Auth Proxy] Failed to reach backend at ${targetUrl}:`, err?.message);
+    console.error(`[Auth Proxy] Failed to reach backend:`, err?.message);
+    if (req.method === "OPTIONS") {
+      return new NextResponse(null, {
+        status: 204,
+        headers: {
+          Allow: "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        },
+      });
+    }
     return NextResponse.json(
       { success: false, message: "Authentication service temporarily unreachable" },
       { status: 502 }
     );
   }
 
+  // Remove response headers that become invalid after decompression or are hop-by-hop
+  const STRIP_RESPONSE_HEADERS = new Set([
+    "content-encoding",
+    "content-length",
+    "transfer-encoding",
+    "connection",
+    "keep-alive",
+    "set-cookie", // Handled separately via getSetCookie()
+  ]);
+
   const responseHeaders = new Headers();
   backendRes.headers.forEach((value, key) => {
-    if (key.toLowerCase() !== "set-cookie") {
+    if (!STRIP_RESPONSE_HEADERS.has(key.toLowerCase())) {
       responseHeaders.set(key, value);
     }
   });
 
-  const response = new NextResponse(backendRes.body, {
+  // Status 204 (No Content), 205 (Reset Content), and 304 (Not Modified) MUST NOT include a response body
+  const isNoContent =
+    backendRes.status === 204 ||
+    backendRes.status === 205 ||
+    backendRes.status === 304;
+
+  const responseBody = isNoContent ? null : await backendRes.arrayBuffer();
+
+  const response = new NextResponse(responseBody, {
     status: backendRes.status,
     statusText: backendRes.statusText,
     headers: responseHeaders,
