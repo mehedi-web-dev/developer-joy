@@ -1,9 +1,15 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 
 export default function AnimatedBackground() {
+  const pathname = usePathname();
   const reduceMotion = useReducedMotion();
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   const floating = (duration: number, delay = 0) => {
     if (reduceMotion) return {};
