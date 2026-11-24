@@ -13,8 +13,10 @@ import {
 } from '../types/cms';
 
 
-// Base URL from env
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
+import { getApiBaseUrl } from './api-config';
+
+// Centralized base URL
+const BASE_URL = getApiBaseUrl();
 
 
 

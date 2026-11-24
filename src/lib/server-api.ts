@@ -17,6 +17,7 @@ import {
   AdminUser,
 } from '../types/cms';
 import { cookies } from 'next/headers';
+import { getApiBaseUrl } from './api-config';
 
 /** Build a Cookie header from the incoming request cookies */
 async function getCookieHeader(): Promise<string | undefined> {
@@ -50,7 +51,7 @@ export async function getPublicProjects(params?: {
   if (params?.featured !== undefined) query.append('featured', String(params.featured));
   if (params?.search) query.append('search', params.search);
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/projects${query.toString() ? `?${query}` : ''}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/projects${query.toString() ? `?${query}` : ''}`, {
     method: 'GET',
     headers: { Accept: 'application/json' },
     next: { revalidate: 60 },
@@ -64,7 +65,7 @@ export async function getPublicProjects(params?: {
 
 /** Fetch a single public project by ID or slug */
 export async function getPublicProjectByIdOrSlug(idOrSlug: string): Promise<ProjectResponse> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/projects/${encodeURIComponent(idOrSlug)}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/projects/${encodeURIComponent(idOrSlug)}`, {
     method: 'GET',
     headers: { Accept: 'application/json' },
     next: { revalidate: 60 },
@@ -93,7 +94,7 @@ export async function getAdminProjects(params?: {
   if (params?.search) query.append('search', params.search);
 
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/projects${query.toString() ? `?${query}` : ''}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/projects${query.toString() ? `?${query}` : ''}`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -109,7 +110,7 @@ export async function getAdminProjects(params?: {
 
 export async function createAdminProject(payload: Partial<Project>): Promise<ProjectResponse> {
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/projects`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/projects`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -127,7 +128,7 @@ export async function createAdminProject(payload: Partial<Project>): Promise<Pro
 
 export async function updateAdminProject(id: string, payload: Partial<Project>): Promise<ProjectResponse> {
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/projects/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/projects/${encodeURIComponent(id)}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -145,7 +146,7 @@ export async function updateAdminProject(id: string, payload: Partial<Project>):
 
 export async function deleteAdminProject(id: string): Promise<{ success: boolean; message?: string }> {
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/projects/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/projects/${encodeURIComponent(id)}`, {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
@@ -165,7 +166,7 @@ export async function getServerSession(): Promise<{ user?: AdminUser; session?: 
   if (!cookieHeader) return null;
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/get-session`, {
+    const res = await fetch(`${getApiBaseUrl()}/api/auth/get-session`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -194,7 +195,7 @@ export async function getPublicServices(params?: {
   if (params?.featured !== undefined) query.append('featured', String(params.featured));
   if (params?.search) query.append('search', params.search);
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/services${query.toString() ? `?${query}` : ''}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/services${query.toString() ? `?${query}` : ''}`, {
     method: 'GET',
     headers: { Accept: 'application/json' },
     next: { revalidate: 60 },
@@ -208,7 +209,7 @@ export async function getPublicServices(params?: {
 
 /** Fetch a single public service by ID or slug */
 export async function getPublicServiceByIdOrSlug(idOrSlug: string): Promise<ServiceResponse> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/services/${encodeURIComponent(idOrSlug)}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/services/${encodeURIComponent(idOrSlug)}`, {
     method: 'GET',
     headers: { Accept: 'application/json' },
     next: { revalidate: 60 },
@@ -236,7 +237,7 @@ export async function getAdminServices(params?: {
   if (params?.search) query.append('search', params.search);
 
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/services${query.toString() ? `?${query}` : ''}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/services${query.toString() ? `?${query}` : ''}`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -253,7 +254,7 @@ export async function getAdminServices(params?: {
 /** Create a new service (admin) */
 export async function createAdminService(payload: Partial<Service>): Promise<ServiceResponse> {
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/services`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/services`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -272,7 +273,7 @@ export async function createAdminService(payload: Partial<Service>): Promise<Ser
 /** Update an existing service (admin) */
 export async function updateAdminService(id: string, payload: Partial<Service>): Promise<ServiceResponse> {
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/services/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/services/${encodeURIComponent(id)}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -291,7 +292,7 @@ export async function updateAdminService(id: string, payload: Partial<Service>):
 /** Delete a service (admin) */
 export async function deleteAdminService(id: string): Promise<{ success: boolean; message?: string }> {
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/services/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/services/${encodeURIComponent(id)}`, {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
@@ -318,7 +319,7 @@ export async function getPublicTestimonials(params?: {
   if (params?.featured !== undefined) query.append('featured', String(params.featured));
   if (params?.search) query.append('search', params.search);
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/testimonials${query.toString() ? `?${query}` : ''}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/testimonials${query.toString() ? `?${query}` : ''}`, {
     method: 'GET',
     headers: { Accept: 'application/json' },
     next: { revalidate: 60 },
@@ -332,7 +333,7 @@ export async function getPublicTestimonials(params?: {
 
 /** Fetch a single public testimonial by ID */
 export async function getPublicTestimonialById(id: string): Promise<TestimonialResponse> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/testimonials/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/testimonials/${encodeURIComponent(id)}`, {
     method: 'GET',
     headers: { Accept: 'application/json' },
     next: { revalidate: 60 },
@@ -360,7 +361,7 @@ export async function getAdminTestimonials(params?: {
   if (params?.search) query.append('search', params.search);
 
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/testimonials${query.toString() ? `?${query}` : ''}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/testimonials${query.toString() ? `?${query}` : ''}`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -377,7 +378,7 @@ export async function getAdminTestimonials(params?: {
 /** Create a new testimonial (admin) */
 export async function createAdminTestimonial(payload: Partial<Testimonial>): Promise<TestimonialResponse> {
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/testimonials`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/testimonials`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -396,7 +397,7 @@ export async function createAdminTestimonial(payload: Partial<Testimonial>): Pro
 /** Update an existing testimonial (admin) */
 export async function updateAdminTestimonial(id: string, payload: Partial<Testimonial>): Promise<TestimonialResponse> {
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/testimonials/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/testimonials/${encodeURIComponent(id)}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -415,7 +416,7 @@ export async function updateAdminTestimonial(id: string, payload: Partial<Testim
 /** Delete a testimonial (admin) */
 export async function deleteAdminTestimonial(id: string): Promise<{ success: boolean; message?: string }> {
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/testimonials/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/testimonials/${encodeURIComponent(id)}`, {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
@@ -444,7 +445,7 @@ export async function getPublicFaqs(params?: {
   if (params?.featured !== undefined) query.append('featured', String(params.featured));
   if (params?.search) query.append('search', params.search);
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/faqs${query.toString() ? `?${query}` : ''}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/faqs${query.toString() ? `?${query}` : ''}`, {
     method: 'GET',
     headers: { Accept: 'application/json' },
     next: { revalidate: 60 },
@@ -458,7 +459,7 @@ export async function getPublicFaqs(params?: {
 
 /** Fetch a single public FAQ by ID */
 export async function getPublicFaqById(id: string): Promise<FaqResponse> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/faqs/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/faqs/${encodeURIComponent(id)}`, {
     method: 'GET',
     headers: { Accept: 'application/json' },
     next: { revalidate: 60 },
@@ -488,7 +489,7 @@ export async function getAdminFaqs(params?: {
   if (params?.search) query.append('search', params.search);
 
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/faqs${query.toString() ? `?${query}` : ''}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/faqs${query.toString() ? `?${query}` : ''}`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -505,7 +506,7 @@ export async function getAdminFaqs(params?: {
 /** Create a new FAQ (admin) */
 export async function createAdminFaq(payload: Partial<Faq>): Promise<FaqResponse> {
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/faqs`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/faqs`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -524,7 +525,7 @@ export async function createAdminFaq(payload: Partial<Faq>): Promise<FaqResponse
 /** Update an existing FAQ (admin) */
 export async function updateAdminFaq(id: string, payload: Partial<Faq>): Promise<FaqResponse> {
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/faqs/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/faqs/${encodeURIComponent(id)}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -543,7 +544,7 @@ export async function updateAdminFaq(id: string, payload: Partial<Faq>): Promise
 /** Delete an FAQ (admin) */
 export async function deleteAdminFaq(id: string): Promise<{ success: boolean; message?: string }> {
   const cookieHeader = await getCookieHeader();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/admin/faqs/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${getApiBaseUrl()}/api/admin/faqs/${encodeURIComponent(id)}`, {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',

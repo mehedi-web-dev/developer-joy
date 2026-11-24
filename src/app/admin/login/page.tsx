@@ -31,23 +31,44 @@ export default function AdminLoginPage() {
     }
     setLoading(true);
     try {
-      const { error: signInError } = await authClient.signIn.email({
+      const { data: signInData, error: signInError } = await authClient.signIn.email({
         email,
         password,
       });
+
       if (signInError) {
         setError(signInError.message ?? "Invalid email or password");
         setLoading(false);
         return;
       }
-      // fetch session to verify admin role
+
+      // 1. Direct role check from the authenticated sign-in response
+      const userRole = (signInData as any)?.user?.role;
+      if (userRole === "admin") {
+        router.push("/admin/dashboard");
+        router.refresh();
+        return;
+      }
+
+      // 2. Verification via getSession
       const { data: session } = await authClient.getSession();
       if (session?.user?.role === "admin") {
         router.push("/admin/dashboard");
         router.refresh();
-      } else {
+        return;
+      }
+
+      // If user is authenticated but explicitly has a non-admin role
+      if (userRole && userRole !== "admin") {
         setError("Access denied: You do not have administrator permissions.");
         await authClient.signOut();
+      } else if (session?.user && session.user.role !== "admin") {
+        setError("Access denied: You do not have administrator permissions.");
+        await authClient.signOut();
+      } else {
+        // Server-side authoritative verification via ProtectedAdminLayout
+        router.push("/admin/dashboard");
+        router.refresh();
       }
     } catch (err: any) {
       setError(err?.message ?? "An unexpected authentication error occurred");
