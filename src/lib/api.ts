@@ -7,6 +7,9 @@ import {
   Testimonial,
   TestimonialsResponse,
   TestimonialResponse,
+  Faq,
+  FaqsResponse,
+  FaqResponse,
 } from '../types/cms';
 
 
@@ -340,6 +343,118 @@ export async function deleteAdminTestimonial(id: string): Promise<{ success: boo
   if (!res.ok) {
     const err = await res.text();
     throw new ApiError(`Failed to delete testimonial ${id}: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as { success: boolean; message?: string };
+}
+
+export async function getPublicFaqs(params?: {
+  page?: number;
+  limit?: number;
+  category?: string;
+  featured?: boolean;
+  search?: string;
+}): Promise<FaqsResponse> {
+  const query = new URLSearchParams();
+  if (params?.page) query.append('page', String(params.page));
+  if (params?.limit) query.append('limit', String(params.limit));
+  if (params?.category) query.append('category', params.category);
+  if (params?.featured !== undefined) query.append('featured', String(params.featured));
+  if (params?.search) query.append('search', params.search);
+
+  const res = await fetch(`${BASE_URL}/api/faqs${query.toString() ? `?${query}` : ''}`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to fetch FAQs: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as FaqsResponse;
+}
+
+export async function getPublicFaqById(id: string): Promise<FaqResponse> {
+  const res = await fetch(`${BASE_URL}/api/faqs/${encodeURIComponent(id)}`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to fetch FAQ ${id}: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as FaqResponse;
+}
+
+export async function getAdminFaqs(params?: {
+  page?: number;
+  limit?: number;
+  status?: string;
+  category?: string;
+  featured?: boolean;
+  search?: string;
+}): Promise<FaqsResponse> {
+  const query = new URLSearchParams();
+  if (params?.page) query.append('page', String(params.page));
+  if (params?.limit) query.append('limit', String(params.limit));
+  if (params?.status) query.append('status', params.status);
+  if (params?.category) query.append('category', params.category);
+  if (params?.featured !== undefined) query.append('featured', String(params.featured));
+  if (params?.search) query.append('search', params.search);
+
+  const res = await fetch(`${BASE_URL}/api/admin/faqs${query.toString() ? `?${query}` : ''}`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to fetch admin FAQs: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as FaqsResponse;
+}
+
+export async function createAdminFaq(payload: Partial<Faq>): Promise<FaqResponse> {
+  const res = await fetch(`${BASE_URL}/api/admin/faqs`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to create FAQ: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as FaqResponse;
+}
+
+export async function updateAdminFaq(id: string, payload: Partial<Faq>): Promise<FaqResponse> {
+  const res = await fetch(`${BASE_URL}/api/admin/faqs/${encodeURIComponent(id)}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to update FAQ ${id}: ${res.status}`, res.status, err);
+  }
+  return (await res.json()) as FaqResponse;
+}
+
+export async function deleteAdminFaq(id: string): Promise<{ success: boolean; message?: string }> {
+  const res = await fetch(`${BASE_URL}/api/admin/faqs/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    headers: { Accept: 'application/json' },
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new ApiError(`Failed to delete FAQ ${id}: ${res.status}`, res.status, err);
   }
   return (await res.json()) as { success: boolean; message?: string };
 }
