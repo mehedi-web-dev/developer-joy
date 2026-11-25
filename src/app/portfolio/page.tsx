@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
+  ArrowRight,
   ArrowUpRight,
   CheckCircle2,
   Globe,
@@ -202,8 +203,10 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
                   {allProjects.length > 0 ? (
                     allProjects.slice(0, 6).map((project, index) => {
                       const itemNumber = String(index + 1).padStart(2, "0");
-                      const targetUrl = project.liveUrl || "#projects";
-                      const isExternal = Boolean(project.liveUrl);
+                      const targetUrl = project.slug
+                        ? `/portfolio/${project.slug}`
+                        : project.liveUrl || "#projects";
+                      const isExternal = !project.slug && Boolean(project.liveUrl);
 
                       return (
                         <Link
@@ -229,9 +232,9 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
                             </div>
                           </div>
 
-                          <ArrowUpRight
+                          <ArrowRight
                             size={18}
-                            className="shrink-0 text-default-400 transition-colors group-hover:text-primary"
+                            className="shrink-0 text-default-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-primary"
                           />
                         </Link>
                       );
@@ -330,7 +333,11 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
                     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-divider bg-default-50/50 transition-all duration-500 hover:-translate-y-2 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/5">
                       {/* Project Preview */}
                       <div className="relative aspect-[16/11] overflow-hidden bg-gradient-to-br from-default-200 via-default-100 to-primary/10 p-5 sm:p-6">
-                        <div className="relative flex h-full flex-col overflow-hidden rounded-xl border border-divider bg-background shadow-xl transition-transform duration-700 group-hover:scale-[1.03]">
+                        <Link
+                          href={`/portfolio/${project.slug}`}
+                          className="relative flex h-full flex-col overflow-hidden rounded-xl border border-divider bg-background shadow-xl transition-transform duration-700 group-hover:scale-[1.03] block"
+                          aria-label={`View ${project.title} case study`}
+                        >
                           {/* Browser Header */}
                           <div className="flex h-9 shrink-0 items-center gap-1.5 border-b border-divider bg-default-100 px-3">
                             <span className="h-2 w-2 rounded-full bg-red-400" />
@@ -374,7 +381,7 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
                               </span>
                             </div>
                           )}
-                        </div>
+                        </Link>
 
                         {/* Project Number */}
                         <div className="absolute right-8 top-8 rounded-lg border border-white/20 bg-background/80 px-3 py-1.5 text-xs font-bold text-foreground shadow-lg backdrop-blur-md">
@@ -382,19 +389,11 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
                         </div>
 
                         {/* Hover Overlay */}
-                        {project.liveUrl && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-primary/10 opacity-0 backdrop-blur-[2px] transition-opacity duration-500 group-hover:opacity-100">
-                            <Link
-                              href={project.liveUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              aria-label={`Visit ${project.title} website`}
-                              className="flex h-12 w-12 scale-75 items-center justify-center rounded-full bg-primary text-white shadow-xl transition-transform duration-500 group-hover:scale-100"
-                            >
-                              <ArrowUpRight size={22} />
-                            </Link>
-                          </div>
-                        )}
+                        <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-primary/10 opacity-0 backdrop-blur-[2px] transition-opacity duration-500 group-hover:opacity-100">
+                          <span className="flex h-12 w-12 scale-75 items-center justify-center rounded-full bg-primary text-white shadow-xl transition-transform duration-500 group-hover:scale-100">
+                            <ArrowRight size={22} />
+                          </span>
+                        </div>
                       </div>
 
                       {/* Project Details */}
@@ -406,7 +405,9 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
                             </span>
 
                             <h3 className="mt-2 text-xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary">
-                              {project.title}
+                              <Link href={`/portfolio/${project.slug}`}>
+                                {project.title}
+                              </Link>
                             </h3>
                           </div>
 
@@ -434,25 +435,33 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
                           </div>
                         )}
 
-                        {project.liveUrl ? (
+                        <div className="mt-auto flex items-center justify-between border-t border-divider pt-5 text-sm font-semibold">
                           <Link
-                            href={project.liveUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-auto flex items-center justify-between border-t border-divider pt-5 text-sm font-semibold text-foreground transition-colors hover:text-primary"
+                            href={`/portfolio/${project.slug}`}
+                            className="inline-flex items-center gap-1.5 text-foreground hover:text-primary transition-colors"
                           >
-                            View Live Website
-                            <ArrowUpRight
-                              size={18}
-                              className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                            <span>View Case Study</span>
+                            <ArrowRight
+                              size={16}
+                              className="transition-transform duration-300 group-hover:translate-x-1"
                             />
                           </Link>
-                        ) : (
-                          <div className="mt-auto flex items-center justify-between border-t border-divider pt-5 text-sm font-semibold text-default-400">
-                            <span>Website In Production</span>
-                            <span className="text-xs font-normal">Coming Soon</span>
-                          </div>
-                        )}
+
+                          {project.liveUrl ? (
+                            <a
+                              href={project.liveUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs font-medium text-default-400 hover:text-primary transition-colors"
+                              title="Visit live site in new tab"
+                            >
+                              <span>Live Site</span>
+                              <ArrowUpRight size={14} />
+                            </a>
+                          ) : (
+                            <span className="text-xs text-default-400">In Production</span>
+                          )}
+                        </div>
                       </div>
                     </article>
                   </ScrollReveal>
