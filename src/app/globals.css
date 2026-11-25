@@ -52,6 +52,39 @@ html.dark {
   }
 }
 
+@keyframes not-found-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes not-found-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.not-found-rise {
+  animation: not-found-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.not-found-float {
+  animation: not-found-float 6.5s ease-in-out infinite;
+}
+
+.not-found-float-slow {
+  animation: not-found-float 5s ease-in-out infinite;
+}
+
 .animated-grid {
   background-image:
     linear-gradient(to right, rgba(100, 116, 139, 0.12) 1px, transparent 1px),
@@ -70,6 +103,12 @@ html.dark {
 
 @media (prefers-reduced-motion: reduce) {
   .animated-grid {
+    animation: none;
+  }
+
+  .not-found-rise,
+  .not-found-float,
+  .not-found-float-slow {
     animation: none;
   }
 }

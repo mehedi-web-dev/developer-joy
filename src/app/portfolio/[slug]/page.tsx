@@ -5,11 +5,9 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
-  Calendar,
   CheckCircle2,
   Code2,
   ExternalLink,
-  Folder,
   Globe,
   Layers,
   LockKeyhole,
@@ -171,8 +169,8 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
 
       allPublished = published;
     }
-  } catch (err: any) {
-    console.error("Error fetching project details:", err?.message);
+  } catch (err: unknown) {
+    console.error("Error fetching project details:", err instanceof Error ? err.message : String(err));
   }
 
   // Strictly enforce 404 if project is missing or not published
