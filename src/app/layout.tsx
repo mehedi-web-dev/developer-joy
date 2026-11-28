@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: "%s | Developer Joy",
   },
   description:
-    "Developer Joy is a Senior WordPress Developer specializing in custom themes, WooCommerce stores, speed optimization, Elementor Pro, and modern web applications.",
+    "Developer Joy is a WordPress Developer specializing in custom websites, bug fixing, malware removal, WooCommerce, and website security.",
   authors: [{ name: "Developer Joy" }],
   formatDetection: {
     email: false,
@@ -46,15 +46,15 @@ export const metadata: Metadata = {
     type: "website",
     url: "/",
     siteName: "Developer Joy — Portfolio",
-    title: "Developer Joy | Senior WordPress Developer",
+    title: "Developer Joy | WordPress Developer",
     description:
-      "Explore high-performance WordPress, WooCommerce, and modern web applications by Developer Joy, Senior WordPress Developer.",
+      "WordPress Developer specializing in custom websites, bug fixing, malware removal, WooCommerce, and website security.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Developer Joy | Senior WordPress Developer",
+    title: "Developer Joy | WordPress Developer",
     description:
-      "Explore high-performance WordPress, WooCommerce, and modern web applications by Developer Joy, Senior WordPress Developer.",
+      "WordPress Developer specializing in custom websites, bug fixing, malware removal, WooCommerce, and website security.",
   },
   icons: {
     icon: [

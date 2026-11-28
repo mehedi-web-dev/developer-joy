@@ -65,8 +65,8 @@ export function HeroSection({
           <h2 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-[clamp(3rem,4.5vw,4.8rem)] font-display font-extrabold tracking-tighter text-zinc-900 dark:text-white uppercase leading-[0.88] whitespace-nowrap">
             DEVELOPER
           </h2>
-          <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-medium leading-relaxed max-w-xs mt-3 sm:mt-4">
-            Senior WordPress Developer specializing in custom themes, WooCommerce &amp; modern web applications
+          <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-medium leading-relaxed max-w-sm mt-3 sm:mt-4">
+            WordPress Developer specializing in custom websites, bug fixing, malware removal, WooCommerce, and website security.
           </p>
         </div>
       </div>

@@ -162,7 +162,7 @@ const HeroSection = () => {
                 className="rounded-2xl border border-divider bg-default-100/50 p-5 shadow-sm backdrop-blur-md transition-colors hover:border-primary/40 sm:p-7"
               >
                 <h2 className="text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">
-                  250+
+                  450+
                 </h2>
 
                 <p className="mt-2 text-xs font-medium text-default-500 sm:text-sm">
