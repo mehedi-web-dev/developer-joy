@@ -57,7 +57,13 @@ export const metadata: Metadata = {
       "Explore high-performance WordPress, WooCommerce, and modern web applications by Developer Joy, Senior WordPress Developer.",
   },
   icons: {
-    icon: [{ url: "/joy.png" }],
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/joy.png", sizes: "any" },
+    ],
+    apple: [
+      { url: "/joy.png", sizes: "180x180", type: "image/png" },
+    ],
   },
 };
 
@@ -73,6 +79,8 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/joy.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"

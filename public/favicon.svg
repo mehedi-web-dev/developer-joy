@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="joyLimeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e4ff54" />
+      <stop offset="50%" stop-color="#c6ff00" />
+      <stop offset="100%" stop-color="#9de000" />
+    </linearGradient>
+  </defs>
+
+  <!-- Dark Matte Squircle matching Framer Dark (#0f0f0f) -->
+  <rect
+    x="16"
+    y="16"
+    width="480"
+    height="480"
+    rx="124"
+    fill="#0f0f0f"
+    stroke="#c6ff00"
+    stroke-opacity="0.38"
+    stroke-width="12"
+  />
+
+  <!-- Ambient Glow in Center -->
+  <circle cx="256" cy="256" r="140" fill="#c6ff00" opacity="0.14" />
+
+  <!-- Monogram J Curve -->
+  <path
+    d="M 316 136 L 316 296 C 316 358, 276 392, 214 392 C 160 392, 126 358, 118 316"
+    stroke="url(#joyLimeGrad)"
+    stroke-width="62"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+
+  <!-- Top Accent Dot for Joy's J -->
+  <circle cx="214" cy="136" r="28" fill="url(#joyLimeGrad)" />
+</svg>
