@@ -1,27 +1,55 @@
-import AboutSection from "./component/Home/AboutSection";
-import FaqSection from "./component/Home/FaqSection";
-import HeroSection from "./component/Home/HeroSection";
-import PortfolioSection from "./component/Home/PortfolioSection";
-import ServicesSection from "./component/Home/ServicesSection";
-import SkillsSection from "./component/Home/SkillsSection";
-import StatsSection from "./component/Home/StatsSection";
-import TestimonialsSection from "./component/Home/TestimonialsSection";
-import WhyChooseSection from "./component/Home/WhyChooseSection";
+import type { Metadata } from "next";
+import {
+  ScrollStoryWrapper,
+  ServicesPreviewSection,
+  ProjectsPreviewSection,
+  ReviewsSection,
+  FAQSection,
+  ContactSection,
+} from "@/components/sections";
 
-
+export const metadata: Metadata = {
+  title: "Developer Joy | Digital Developer & WordPress Specialist",
+  description:
+    "Explore high-performance WordPress, WooCommerce, React, and Next.js web applications by Developer Joy. Guaranteed fast delivery, clean architecture, and conversion-focused design.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Developer Joy | Digital Developer & WordPress Specialist",
+    description:
+      "Explore high-performance WordPress, WooCommerce, React, and Next.js web applications by Developer Joy.",
+    url: "/",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Developer Joy | Digital Developer & WordPress Specialist",
+    description:
+      "Explore high-performance WordPress, WooCommerce, React, and Next.js web applications by Developer Joy.",
+  },
+};
 
 export default function Home() {
   return (
-    <main>
-      <HeroSection />
-      <AboutSection />
-      <ServicesSection />
-      <WhyChooseSection />
-      <SkillsSection />
-      <PortfolioSection />
-      <StatsSection />
-      <TestimonialsSection />
-      <FaqSection />
-    </main>
+    <div className="flex flex-col bg-transparent text-[var(--foreground)] selection:bg-[#c6ff00] selection:text-black">
+      {/* Unified 3D Scroll Story: Hero + Expectations + About with Sticky 3D Flipping Card */}
+      <ScrollStoryWrapper />
+
+      {/* Services & Automation Section */}
+      <ServicesPreviewSection />
+
+      {/* Featured Projects Section with 50/50 balanced layout */}
+      <ProjectsPreviewSection />
+
+      {/* Testimonials & Proof Section */}
+      <ReviewsSection />
+
+      {/* Frequently Asked Questions */}
+      <FAQSection />
+
+      {/* Contact Form & WhatsApp */}
+      <ContactSection />
+    </div>
   );
 }

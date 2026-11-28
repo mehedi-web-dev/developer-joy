@@ -1,114 +1,223 @@
 @import "tailwindcss";
-
 @import "@heroui/styles";
 
-/*
- * The theme is controlled by the in-app toggle (`.dark` class +
- * `data-theme` attribute), so opt out of HeroUI's system-preference
- * fallback. Without this, a user on a dark OS who selects light mode
- * still gets `dark:` utilities applied to descendants.
- */
-@custom-variant dark (&:where(.dark, .dark *));
-
-/*
- * HeroUI v3 renamed several design tokens. The app still uses the v2-style
- * utility names (primary, default-50…700, divider), which otherwise resolve
- * to nothing — most visibly making primary buttons transparent with white
- * text in light mode. These aliases bridge the names to the v3 tokens.
- */
-@theme inline {
-  --color-primary: var(--accent);
-  --color-primary-foreground: var(--accent-foreground);
-
-  --color-secondary: oklch(0.627 0.265 303.9);
-  --color-secondary-foreground: var(--snow);
-
-  --color-divider: var(--border);
-
-  --color-default-50: var(--default-soft);
-  --color-default-100: var(--default);
-  --color-default-200: var(--border);
-  --color-default-300: var(--border-secondary);
-  --color-default-400: var(--muted);
-  --color-default-500: var(--muted);
-  --color-default-600: color-mix(in oklab, var(--muted) 55%, var(--foreground) 45%);
-  --color-default-700: color-mix(in oklab, var(--muted) 30%, var(--foreground) 70%);
-}
+@custom-variant dark (&:is(.dark, .dark *));
 
 :root {
-  color-scheme: light;
+  /* Colors - Light Theme matching Framer Light */
+  --background: #f7f8fa;
+  --foreground: #0c0d0e;
+  --surface: #ffffff;
+  --surface-hover: #f1f3f6;
+  --surface-subtle: #eaecef;
+  --border: rgba(0, 0, 0, 0.09);
+  --border-subtle: rgba(0, 0, 0, 0.05);
+  --primary: #a8e600;
+  --primary-hover: #96cc00;
+  --primary-foreground: #000000;
+  --secondary: #101114;
+  --secondary-hover: #1e2024;
+  --secondary-foreground: #ffffff;
+  --accent: #a8e600;
+  --accent-foreground: #000000;
+  --muted: #64748b;
+  --muted-foreground: #94a3b8;
+  --card: #ffffff;
+  --card-foreground: #0c0d0e;
+  --card-border: rgba(0, 0, 0, 0.08);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.06);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 25px -3px rgba(168, 230, 0, 0.3);
 }
 
-html.dark {
-  color-scheme: dark;
+.dark {
+  /* Colors - Dark Theme matching Framer Dark exactly (depalm.framer.ai) */
+  --background: #0f0f0f;
+  --foreground: #ffffff;
+  --surface: #1a1a1b;
+  --surface-hover: #222224;
+  --surface-subtle: #141415;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --primary: #c6ff00;
+  --primary-hover: #b3ea00;
+  --primary-foreground: #000000;
+  --secondary: #c6ff00;
+  --secondary-hover: #b3ea00;
+  --secondary-foreground: #000000;
+  --accent: #c6ff00;
+  --accent-foreground: #000000;
+  --muted: #b5b5b5;
+  --muted-foreground: #8f8f8f;
+  --card: #1a1a1b;
+  --card-foreground: #ffffff;
+  --card-border: rgba(255, 255, 255, 0.08);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(26, 26, 27, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 25px -3px rgba(198, 255, 0, 0.3);
 }
 
-@keyframes grid-pan {
-  from {
-    background-position: 0 0;
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-card-border: var(--card-border);
+  --color-lime: #c6ff00;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-oswald), var(--font-space-grotesk), var(--font-geist-sans), sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Glassmorphism utility */
+@utility glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Glow accent */
+@utility glow-primary {
+  box-shadow: var(--shadow-glow);
+}
+
+@utility glow-secondary {
+  box-shadow: 0 0 25px -3px rgba(34, 211, 238, 0.3);
+}
+
+/* Responsive custom container */
+@utility container-custom {
+  width: 100%;
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-custom {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
-  to {
-    background-position: 60px 60px;
+}
+
+@media (min-width: 1024px) {
+  .container-custom {
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
 
-@keyframes not-found-rise {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  color-scheme: light dark;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Selection styles */
+::selection {
+  background-color: rgba(198, 255, 0, 0.3);
+  color: var(--foreground);
+}
+
+/* Focus visibility */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Accessible reduced-motion behavior */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+}
+
+/* Global Custom Cursor styles for desktop fine-pointer devices */
+@media (hover: hover) and (pointer: fine) {
+  html,
+  body,
+  body *,
+  body *::before,
+  body *::after {
+    cursor: none !important;
   }
-}
 
-@keyframes not-found-float {
-  0%,
-  100% {
-    transform: translateY(0);
+  input,
+  textarea,
+  [contenteditable="true"],
+  [contenteditable=""] {
+    cursor: text !important;
   }
-  50% {
-    transform: translateY(-10px);
+
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="range"],
+  input[type="color"],
+  input[type="file"],
+  input[type="image"] {
+    cursor: none !important;
   }
-}
-
-.not-found-rise {
-  animation: not-found-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.not-found-float {
-  animation: not-found-float 6.5s ease-in-out infinite;
-}
-
-.not-found-float-slow {
-  animation: not-found-float 5s ease-in-out infinite;
-}
-
-.animated-grid {
-  background-image:
-    linear-gradient(to right, rgba(100, 116, 139, 0.12) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(100, 116, 139, 0.12) 1px, transparent 1px);
-  background-size: 60px 60px;
-  animation: grid-pan 24s linear infinite;
-  mask-image: linear-gradient(to bottom, black, transparent 92%);
-  -webkit-mask-image: linear-gradient(to bottom, black, transparent 92%);
-}
-
-.dark .animated-grid {
-  background-image:
-    linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animated-grid {
-    animation: none;
-  }
-
-  .not-found-rise,
-  .not-found-float,
-  .not-found-float-slow {
-    animation: none;
+  html,
+  body,
+  body *,
+  body *::before,
+  body *::after {
+    cursor: auto !important;
   }
 }
