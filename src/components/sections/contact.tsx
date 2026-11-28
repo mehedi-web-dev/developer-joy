@@ -3,7 +3,13 @@
 import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, CheckCircle2, MessageSquare, Mail } from "lucide-react";
-import { WhatsAppIcon } from "@/components/ui/icons";
+import {
+  WhatsAppIcon,
+  TelegramIcon,
+  FacebookIcon,
+  InstagramIcon,
+  XIcon,
+} from "@/components/ui/icons";
 
 export function ContactSection() {
   const [formData, setFormData] = React.useState({
@@ -54,23 +60,66 @@ export function ContactSection() {
             Let&apos;s build something impactful together — whether it&apos;s your brand, your high-converting website, or your next big digital product.
           </p>
 
-          {/* Direct Quick Contact CTAs: WhatsApp & Email */}
+          {/* Direct Quick Contact CTAs: WhatsApp, Telegram & Email */}
           <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
             <a
               href="https://wa.me/8801610186886"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/[0.05] hover:bg-[#25D366]/20 border border-black/10 dark:border-white/10 hover:border-[#25D366]/40 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-all"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/[0.05] hover:bg-[#25D366]/20 border border-black/10 dark:border-white/10 hover:border-[#25D366]/40 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-all cursor-pointer"
             >
               <WhatsAppIcon className="w-3.5 h-3.5 text-[#25D366]" />
               <span>WhatsApp: +880 1610-186886</span>
             </a>
             <a
+              href="https://t.me/+8801610186886"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/[0.05] hover:bg-[#0088cc]/20 border border-black/10 dark:border-white/10 hover:border-[#0088cc]/40 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-all cursor-pointer"
+            >
+              <TelegramIcon className="w-3.5 h-3.5 text-[#0088cc]" />
+              <span>Telegram: @developerjoy</span>
+            </a>
+            <a
               href="mailto:jewelsweb7@gmail.com"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/[0.05] hover:bg-[#c6ff00]/20 border border-black/10 dark:border-white/10 hover:border-[#c6ff00]/40 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-all font-mono"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/[0.05] hover:bg-[#c6ff00]/20 border border-black/10 dark:border-white/10 hover:border-[#c6ff00]/40 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-all font-mono cursor-pointer"
             >
               <Mail className="w-3.5 h-3.5 text-[#65a30d] dark:text-[#c6ff00]" />
               <span>jewelsweb7@gmail.com</span>
+            </a>
+          </div>
+
+          {/* Social Icons row */}
+          <div className="flex items-center justify-center gap-2.5 mt-4">
+            <a
+              href="https://web.facebook.com/joy0870"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              title="Facebook"
+              className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/[0.05] hover:bg-[#1877F2]/20 border border-black/10 dark:border-white/10 hover:border-[#1877F2]/40 text-zinc-600 dark:text-zinc-400 hover:text-[#1877F2] flex items-center justify-center transition-all cursor-pointer"
+            >
+              <FacebookIcon className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="https://www.instagram.com/joykh4n_?bqrl=MTIxeTB1c2hqbjUwNg=="
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              title="Instagram"
+              className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/[0.05] hover:bg-[#E4405F]/20 border border-black/10 dark:border-white/10 hover:border-[#E4405F]/40 text-zinc-600 dark:text-zinc-400 hover:text-[#E4405F] flex items-center justify-center transition-all cursor-pointer"
+            >
+              <InstagramIcon className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="https://x.com/developer_joy1"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="X (Twitter)"
+              title="X"
+              className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/[0.05] hover:bg-[#c6ff00]/20 border border-black/10 dark:border-white/10 hover:border-[#c6ff00]/40 text-zinc-600 dark:text-zinc-400 hover:text-[#c6ff00] flex items-center justify-center transition-all cursor-pointer"
+            >
+              <XIcon className="w-3.5 h-3.5" />
             </a>
           </div>
         </div>

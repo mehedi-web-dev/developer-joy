@@ -2,7 +2,13 @@
 
 import * as React from "react";
 import { ArrowUpRight, ArrowUp } from "lucide-react";
-import { GithubIcon, LinkedinIcon, WhatsAppIcon } from "@/components/ui/icons";
+import {
+  WhatsAppIcon,
+  TelegramIcon,
+  FacebookIcon,
+  InstagramIcon,
+  XIcon,
+} from "@/components/ui/icons";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -14,6 +20,34 @@ export function Footer() {
       behavior: "smooth",
     });
   };
+
+  const socialLinks = [
+    {
+      name: "WhatsApp",
+      href: "https://wa.me/8801610186886",
+      icon: <WhatsAppIcon className="w-4 h-4" />,
+    },
+    {
+      name: "Telegram",
+      href: "https://t.me/+8801610186886",
+      icon: <TelegramIcon className="w-4 h-4" />,
+    },
+    {
+      name: "Facebook",
+      href: "https://web.facebook.com/joy0870",
+      icon: <FacebookIcon className="w-4 h-4" />,
+    },
+    {
+      name: "Instagram",
+      href: "https://www.instagram.com/joykh4n_?bqrl=MTIxeTB1c2hqbjUwNg==",
+      icon: <InstagramIcon className="w-4 h-4" />,
+    },
+    {
+      name: "X",
+      href: "https://x.com/developer_joy1",
+      icon: <XIcon className="w-4 h-4" />,
+    },
+  ];
 
   return (
     <footer className="w-full bg-[#c6ff00] text-black pt-12 sm:pt-16 pb-10 sm:pb-12 px-4 sm:px-8 md:px-12 mt-16 sm:mt-20 relative z-20">
@@ -46,34 +80,20 @@ export function Footer() {
               <span className="text-xs font-bold text-black/60 block mb-1">
                 Connect :
               </span>
-              <div className="flex items-center gap-3">
-                <a
-                  href="https://github.com/developerjoy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-black/10 hover:bg-black hover:text-[#c6ff00] text-black flex items-center justify-center transition-colors"
-                  aria-label="GitHub"
-                >
-                  <GithubIcon className="w-4 h-4" />
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/jewel-joy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-black/10 hover:bg-black hover:text-[#c6ff00] text-black flex items-center justify-center transition-colors"
-                  aria-label="LinkedIn"
-                >
-                  <LinkedinIcon className="w-4 h-4" />
-                </a>
-                <a
-                  href="https://wa.me/8801610186886"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-black/10 hover:bg-black hover:text-[#c6ff00] text-black flex items-center justify-center transition-colors"
-                  aria-label="WhatsApp"
-                >
-                  <WhatsAppIcon className="w-4 h-4" />
-                </a>
+              <div className="flex items-center flex-wrap gap-2.5">
+                {socialLinks.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-full bg-black/10 hover:bg-black hover:text-[#c6ff00] text-black flex items-center justify-center transition-colors cursor-pointer"
+                    aria-label={item.name}
+                    title={item.name}
+                  >
+                    {item.icon}
+                  </a>
+                ))}
               </div>
             </div>
           </div>
