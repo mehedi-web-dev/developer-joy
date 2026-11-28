@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
     // Send email
     await transporter.sendMail({
       from: `"DeveloperJoy Contact" <${emailUser}>`,
-      to: "mehedihasan958327@gmail.com",
+      to: "joykhanfiverr@gmail.com",
       replyTo: cleanEmail,
       subject: `New Contact Message: ${cleanSubject}`,
       text: `

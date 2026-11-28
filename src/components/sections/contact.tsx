@@ -81,11 +81,11 @@ export function ContactSection() {
               <span>Telegram: @developerjoy</span>
             </a>
             <a
-              href="mailto:jewelsweb7@gmail.com"
+              href="mailto:joykhanfiverr@gmail.com"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/[0.05] hover:bg-[#c6ff00]/20 border border-black/10 dark:border-white/10 hover:border-[#c6ff00]/40 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-all font-mono cursor-pointer"
             >
               <Mail className="w-3.5 h-3.5 text-[#65a30d] dark:text-[#c6ff00]" />
-              <span>jewelsweb7@gmail.com</span>
+              <span>joykhanfiverr@gmail.com</span>
             </a>
           </div>
 

@@ -68,10 +68,10 @@ export function Footer() {
                 Email :
               </span>
               <a
-                href="mailto:jewelsweb7@gmail.com"
+                href="mailto:joykhanfiverr@gmail.com"
                 className="text-sm sm:text-base md:text-lg font-semibold hover:underline inline-flex items-center gap-1 text-black break-all sm:break-normal"
               >
-                jewelsweb7@gmail.com
+                joykhanfiverr@gmail.com
                 <ArrowUpRight className="w-4 h-4 shrink-0" />
               </a>
             </div>

@@ -74,10 +74,10 @@ export function AboutSection({
               <ChevronRight className="w-4 h-4" />
             </Link>
             <a
-              href="mailto:jewelsweb7@gmail.com"
+              href="mailto:joykhanfiverr@gmail.com"
               className="text-xs font-mono text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors break-all"
             >
-              jewelsweb7@gmail.com
+              joykhanfiverr@gmail.com
             </a>
           </div>
         </div>

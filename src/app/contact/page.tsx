@@ -287,7 +287,7 @@ export default function ContactPage() {
           </div>
 
           {/* Email */}
-          <a href="mailto:mehedihasan958327@gmail.com" className={contactCardClass}>
+          <a href="mailto:joykhanfiverr@gmail.com" className={contactCardClass}>
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
               <Mail size={22} />
             </span>
@@ -298,7 +298,7 @@ export default function ContactPage() {
               </span>
 
               <span className="break-all font-semibold text-foreground">
-                mehedihasan958327@gmail.com
+                joykhanfiverr@gmail.com
               </span>
             </span>
           </a>
