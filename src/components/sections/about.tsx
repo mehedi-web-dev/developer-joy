@@ -24,7 +24,7 @@ export function AboutSection({
             Bridging Creative Vision with Engineering Precision
           </h2>
           <p className="text-zinc-700 dark:text-zinc-300 text-sm sm:text-base leading-relaxed mb-4">
-            Over the past 6+ years, I have worked as a Senior WordPress Developer—delivering more than 250 successful projects for international businesses, creative agencies, and founders.
+            Over the past 5+ years, I have worked as a Senior WordPress Developer—delivering more than 450 successful projects for international businesses, creative agencies, and founders.
           </p>
           <p className="text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm leading-relaxed mb-8">
             Whether building bespoke Elementor Pro layouts, high-converting WooCommerce stores, or lightning-fast web applications with Next.js, React, and TypeScript, my goal is always the same: clean, scalable code and designs that convert.
@@ -34,7 +34,7 @@ export function AboutSection({
           <div className="grid grid-cols-3 gap-3 sm:gap-6 py-6 border-y border-black/10 dark:border-white/10 mb-8">
             <div>
               <div className="text-3xl sm:text-5xl font-display font-extrabold text-[#65a30d] dark:text-[#c6ff00]">
-                <AnimatedCounter from={0} to={6} suffix="+" />
+                <AnimatedCounter from={0} to={5} suffix="+" />
               </div>
               <p className="text-[11px] sm:text-xs md:text-sm text-zinc-500 dark:text-zinc-400 font-medium mt-1">
                 Years Experience
@@ -42,7 +42,7 @@ export function AboutSection({
             </div>
             <div>
               <div className="text-3xl sm:text-5xl font-display font-extrabold text-[#65a30d] dark:text-[#c6ff00]">
-                <AnimatedCounter from={0} to={250} suffix="+" />
+                <AnimatedCounter from={0} to={450} suffix="+" />
               </div>
               <p className="text-[11px] sm:text-xs md:text-sm text-zinc-500 dark:text-zinc-400 font-medium mt-1">
                 Projects Delivered

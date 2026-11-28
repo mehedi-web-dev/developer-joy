@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Star, ShieldCheck } from "lucide-react";
+import { Star, ShieldCheck, ExternalLink } from "lucide-react";
 import { getPublicTestimonials } from "@/lib/api";
 import type { Testimonial } from "@/types/cms";
 
@@ -11,6 +11,8 @@ interface ReviewItem {
   role: string;
   text: string;
   rating?: number;
+  photo?: string;
+  clientUrl?: string;
 }
 
 const FALLBACK_TESTIMONIALS: ReviewItem[] = [
@@ -60,6 +62,8 @@ export function ReviewsSection() {
               role: [t.designation, t.company].filter(Boolean).join(", ") || "Client",
               text: t.content,
               rating: t.rating || 5,
+              photo: t.photo,
+              clientUrl: t.clientUrl,
             }));
             setReviews(mapped);
           }
@@ -98,7 +102,7 @@ export function ReviewsSection() {
               ))}
             </div>
             <h3 className="text-2xl sm:text-3xl font-display font-extrabold tracking-tight text-black">
-              Over {reviews.length > 4 ? `${reviews.length}+` : "250+"} 5-Star Reviews Worldwide
+              Over {reviews.length > 4 ? `${reviews.length}+` : "450+"} 5-Star Reviews Worldwide
             </h3>
           </div>
           <p className="text-xs font-bold uppercase tracking-wider text-black/60 mt-6">
@@ -138,9 +142,35 @@ export function ReviewsSection() {
                 &ldquo;{rev.text}&rdquo;
               </p>
             </div>
-            <div className="pt-4 border-t border-black/10 dark:border-white/10">
-              <p className="text-xs font-bold text-zinc-900 dark:text-white">{rev.author}</p>
-              <p className="text-[11px] text-zinc-500 dark:text-zinc-400">{rev.role}</p>
+            <div className="pt-4 border-t border-black/10 dark:border-white/10 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                {rev.photo ? (
+                  <img
+                    src={rev.photo}
+                    alt={rev.author}
+                    className="w-9 h-9 rounded-full object-cover shrink-0 border border-black/10 dark:border-white/10"
+                  />
+                ) : (
+                  <div className="w-9 h-9 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 flex items-center justify-center text-xs font-bold shrink-0">
+                    {rev.author.charAt(0)}
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-zinc-900 dark:text-white truncate">{rev.author}</p>
+                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 truncate">{rev.role}</p>
+                </div>
+              </div>
+              {rev.clientUrl && (
+                <a
+                  href={rev.clientUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-zinc-400 hover:text-[#65a30d] dark:hover:text-[#c6ff00] shrink-0"
+                  aria-label="Visit client website"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              )}
             </div>
           </div>
         ))}
