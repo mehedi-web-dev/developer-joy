@@ -73,18 +73,18 @@ export function Navbar() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className={`hidden lg:flex items-center gap-7 px-5 py-2.5 rounded-full border transition-all duration-300 shadow-2xl backdrop-blur-xl ${
             scrolled
-              ? "bg-[#141517]/95 border-white/15 shadow-black/80"
-              : "bg-[#161719]/90 border-white/10"
+              ? "bg-white/95 dark:bg-[#141517]/95 border-black/15 dark:border-white/15 shadow-black/10 dark:shadow-black/80"
+              : "bg-white/90 dark:bg-[#161719]/90 border-black/10 dark:border-white/10"
           }`}
         >
           {/* Monogram J Logo */}
           <Link
             href="/"
             onClick={(e) => handleLinkClick(e, "/")}
-            className="flex items-center justify-center w-8 h-8 rounded-full hover:scale-110 transition-transform focus:outline-none"
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 hover:scale-110 transition-transform focus:outline-none"
             aria-label="Home"
           >
-            <span className="font-display font-extrabold text-base tracking-tight text-white select-none">
+            <span className="font-display font-extrabold text-base tracking-tight text-zinc-900 dark:text-white select-none">
               J
             </span>
           </Link>
@@ -113,15 +113,16 @@ export function Navbar() {
                     className="flex flex-col items-center justify-start h-6 leading-6"
                   >
                     {/* Default Front Label */}
-                    <span className="h-6 flex items-center text-zinc-300 font-medium">
+                    <span className="h-6 flex items-center text-zinc-600 dark:text-zinc-300 font-medium whitespace-nowrap">
                       {item.label}
                     </span>
-                    {/* Hovered Bottom Label */}
+                    {/* 3D Rotated Hover Label in Lime Accent */}
                     <span
+                      className="h-6 flex items-center text-[#65a30d] dark:text-[#c6ff00] font-bold whitespace-nowrap"
                       style={{
-                        transform: "rotateX(90deg) translateZ(12px)",
+                        transform: "rotateX(90deg)",
+                        transformOrigin: "50% 0% 0px",
                       }}
-                      className="h-6 flex items-center font-bold text-[#c6ff00]"
                     >
                       {item.label}
                     </span>
@@ -137,25 +138,26 @@ export function Navbar() {
             onClick={(e) => handleLinkClick(e, "/#contact")}
             onMouseEnter={() => setContactHovered(true)}
             onMouseLeave={() => setContactHovered(false)}
-            className="relative flex items-center justify-center h-9 px-6 rounded-full bg-white text-black text-xs font-semibold tracking-wide transition-all shadow-md ml-1 overflow-hidden select-none cursor-pointer"
+            className="relative flex items-center justify-center h-9 px-6 rounded-full bg-black dark:bg-white text-white dark:text-black text-xs font-semibold tracking-wide transition-all shadow-md ml-1 overflow-hidden select-none cursor-pointer group"
           >
             {/* Expanding Circle Fill from Bottom-Left Corner */}
             <motion.div
               initial={false}
               animate={{
-                width: contactHovered ? 180 : 20,
-                height: contactHovered ? 180 : 20,
-                bottom: contactHovered ? -70 : -20,
-                left: contactHovered ? -30 : -20,
+                scale: contactHovered ? 9 : 0,
               }}
               transition={{
                 type: "spring",
-                stiffness: 380,
-                damping: 28,
+                stiffness: 400,
+                damping: 30,
               }}
-              className="absolute rounded-full bg-[#c6ff00] pointer-events-none z-0"
+              style={{
+                originX: 0,
+                originY: 1,
+              }}
+              className="absolute -bottom-1 -left-1 w-5 h-5 rounded-full bg-[#c6ff00] pointer-events-none z-0"
             />
-            <span className="relative z-10 font-semibold text-black">
+            <span className="relative z-10 font-semibold text-white dark:text-black group-hover:text-black transition-colors">
               Contact
             </span>
           </Link>
@@ -168,14 +170,14 @@ export function Navbar() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className={`flex lg:hidden items-center justify-between gap-2.5 sm:gap-3 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full border transition-all duration-300 shadow-2xl backdrop-blur-xl max-w-[95vw] ${
             scrolled
-              ? "bg-[#141517]/95 border-white/15 shadow-black/80"
-              : "bg-[#161719]/90 border-white/10"
+              ? "bg-white/95 dark:bg-[#141517]/95 border-black/15 dark:border-white/15 shadow-black/10 dark:shadow-black/80 text-zinc-900 dark:text-white"
+              : "bg-white/90 dark:bg-[#161719]/90 border-black/10 dark:border-white/10 text-zinc-900 dark:text-white"
           }`}
         >
           <Link
             href="/"
             onClick={(e) => handleLinkClick(e, "/")}
-            className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center font-bold text-sm text-white shrink-0"
+            className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center font-bold text-sm text-zinc-900 dark:text-white shrink-0"
           >
             J
           </Link>
@@ -183,7 +185,7 @@ export function Navbar() {
           <Link
             href="/#contact"
             onClick={(e) => handleLinkClick(e, "/#contact")}
-            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-white/[0.04] border border-white/5 text-[11px] sm:text-xs font-medium text-zinc-300 truncate"
+            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-black/5 dark:bg-white/[0.04] border border-black/5 dark:border-white/5 text-[11px] sm:text-xs font-medium text-zinc-700 dark:text-zinc-300 truncate"
           >
             <span className="relative flex h-2 w-2 shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#c6ff00] opacity-75" />
@@ -217,7 +219,7 @@ export function Navbar() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.95 }}
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="lg:hidden absolute top-full mt-2 w-64 sm:w-72 bg-[#131416]/95 backdrop-blur-xl border border-white/15 rounded-3xl p-3.5 shadow-2xl overflow-hidden z-50"
+              className="lg:hidden absolute top-full mt-2 w-64 sm:w-72 bg-white/95 dark:bg-[#131416]/95 backdrop-blur-xl border border-black/10 dark:border-white/15 rounded-3xl p-3.5 shadow-2xl overflow-hidden z-50 text-zinc-900 dark:text-white"
             >
               <div className="flex flex-col gap-1">
                 {navLinks.map((item) => (
@@ -225,7 +227,7 @@ export function Navbar() {
                     key={item.label}
                     href={item.href}
                     onClick={(e) => handleLinkClick(e, item.href)}
-                    className="flex items-center justify-between w-full px-3 py-2 rounded-2xl text-left text-sm font-medium text-zinc-200 hover:text-black hover:bg-[#c6ff00] transition-all"
+                    className="flex items-center justify-between w-full px-3 py-2 rounded-2xl text-left text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:text-black hover:bg-[#c6ff00] transition-all"
                   >
                     <span>{item.label}</span>
                     <ArrowUpRight className="w-4 h-4 opacity-40" />
@@ -234,7 +236,7 @@ export function Navbar() {
                 <Link
                   href="/#contact"
                   onClick={(e) => handleLinkClick(e, "/#contact")}
-                  className="mt-2 w-full text-center py-2.5 rounded-full bg-white text-black font-semibold text-xs"
+                  className="mt-2 w-full text-center py-2.5 rounded-full bg-black dark:bg-white text-white dark:text-black font-semibold text-xs"
                 >
                   Contact
                 </Link>
