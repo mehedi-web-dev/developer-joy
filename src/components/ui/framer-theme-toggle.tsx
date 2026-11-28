@@ -31,7 +31,7 @@ export function FramerThemeToggle() {
         whileTap={{ scale: 0.95 }}
         onClick={toggleTheme}
         aria-label="Toggle Dark and Light Mode"
-        className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/15 dark:border-white/15 border-black/10 bg-[#161719]/90 dark:bg-[#161719]/90 bg-white/90 backdrop-blur-xl shadow-2xl cursor-pointer text-xs font-mono font-medium transition-colors"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-black/10 dark:border-white/15 bg-white/90 dark:bg-[#161719]/90 backdrop-blur-xl shadow-2xl cursor-pointer text-xs font-mono font-medium transition-colors text-black dark:text-white"
       >
         {/* Sun Icon */}
         <Sun
@@ -41,7 +41,7 @@ export function FramerThemeToggle() {
         />
 
         {/* Sliding Pill Indicator Switch */}
-        <div className="relative w-8 h-4.5 rounded-full bg-zinc-800 dark:bg-zinc-800 bg-zinc-200 p-0.5 flex items-center">
+        <div className="relative w-8 h-4.5 rounded-full bg-zinc-200 dark:bg-zinc-800 p-0.5 flex items-center">
           <motion.div
             layout
             transition={{ type: "spring", stiffness: 500, damping: 30 }}

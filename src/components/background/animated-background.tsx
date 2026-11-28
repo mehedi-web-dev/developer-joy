@@ -14,7 +14,7 @@ export function AnimatedBackground() {
     >
       {/* Exact Framer Noise Texture layer matching depalm.framer.ai */}
       <div
-        className="fixed inset-0 w-full h-full pointer-events-none mix-blend-color-dodge opacity-[0.12] dark:opacity-[0.13] z-0"
+        className="fixed inset-0 w-full h-full pointer-events-none mix-blend-multiply dark:mix-blend-color-dodge opacity-[0.04] dark:opacity-[0.13] z-0"
         style={{
           backgroundImage: "url(/framer-noise.gif)",
           backgroundRepeat: "repeat",
