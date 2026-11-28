@@ -2,30 +2,77 @@
 
 import * as React from "react";
 import { Star, ShieldCheck } from "lucide-react";
+import { getPublicTestimonials } from "@/lib/api";
+import type { Testimonial } from "@/types/cms";
+
+interface ReviewItem {
+  id: string;
+  author: string;
+  role: string;
+  text: string;
+  rating?: number;
+}
+
+const FALLBACK_TESTIMONIALS: ReviewItem[] = [
+  {
+    id: "1",
+    author: "David R.",
+    role: "Founder, SaaS Platform",
+    text: "Developer Joy delivered our Next.js web application ahead of schedule. The animations are buttery smooth and our conversion rate jumped by 40% in month one.",
+    rating: 5,
+  },
+  {
+    id: "2",
+    author: "Sarah Jenkins",
+    role: "Creative Director",
+    text: "Flawless communication, quick updates on WhatsApp, and a custom WordPress theme that perfectly matches our Figma designs. A true professional.",
+    rating: 5,
+  },
+  {
+    id: "3",
+    author: "Michael Van Dijk",
+    role: "E-Commerce Owner",
+    text: "Our WooCommerce store was sluggish and losing checkouts. Joy redesigned the checkout flow and optimized our speed to 98 on mobile. Outstanding result!",
+    rating: 5,
+  },
+  {
+    id: "4",
+    author: "Lisa Thorne",
+    role: "Marketing Agency Lead",
+    text: "Completely transparent with pricing, zero hidden surprises, and incredible attention to detail. Joy is now our go-to developer for all client projects.",
+    rating: 5,
+  },
+];
 
 export function ReviewsSection() {
-  const testimonials = [
-    {
-      author: "David R.",
-      role: "Founder, SaaS Platform",
-      text: "Developer Joy delivered our Next.js web application ahead of schedule. The animations are buttery smooth and our conversion rate jumped by 40% in month one.",
-    },
-    {
-      author: "Sarah Jenkins",
-      role: "Creative Director",
-      text: "Flawless communication, quick updates on WhatsApp, and a custom WordPress theme that perfectly matches our Figma designs. A true professional.",
-    },
-    {
-      author: "Michael Van Dijk",
-      role: "E-Commerce Owner",
-      text: "Our WooCommerce store was sluggish and losing checkouts. Joy redesigned the checkout flow and optimized our speed to 98 on mobile. Outstanding result!",
-    },
-    {
-      author: "Lisa Thorne",
-      role: "Marketing Agency Lead",
-      text: "Completely transparent with pricing, zero hidden surprises, and incredible attention to detail. Joy is now our go-to developer for all client projects.",
-    },
-  ];
+  const [reviews, setReviews] = React.useState<ReviewItem[]>(FALLBACK_TESTIMONIALS);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    getPublicTestimonials({ limit: 50 })
+      .then((res) => {
+        if (isMounted && res?.data && Array.isArray(res.data) && res.data.length > 0) {
+          const published = res.data.filter((t: Testimonial) => t.status === "published" || !t.status);
+          if (published.length > 0) {
+            const mapped: ReviewItem[] = published.map((t: Testimonial) => ({
+              id: t._id,
+              author: t.clientName,
+              role: [t.designation, t.company].filter(Boolean).join(", ") || "Client",
+              text: t.content,
+              rating: t.rating || 5,
+            }));
+            setReviews(mapped);
+          }
+        }
+      })
+      .catch((err) => {
+        console.warn("Backend testimonials API unavailable, using fallback reviews:", err?.message);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <section id="reviews" className="py-20 px-4 sm:px-6 max-w-6xl mx-auto border-t border-black/10 dark:border-white/10">
@@ -51,7 +98,7 @@ export function ReviewsSection() {
               ))}
             </div>
             <h3 className="text-2xl sm:text-3xl font-display font-extrabold tracking-tight text-black">
-              Over 250+ 5-Star Reviews Worldwide
+              Over {reviews.length > 4 ? `${reviews.length}+` : "250+"} 5-Star Reviews Worldwide
             </h3>
           </div>
           <p className="text-xs font-bold uppercase tracking-wider text-black/60 mt-6">
@@ -74,16 +121,16 @@ export function ReviewsSection() {
         </div>
       </div>
 
-      {/* 4 Testimonial Cards */}
+      {/* Testimonial Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {testimonials.map((rev, i) => (
+        {reviews.map((rev) => (
           <div
-            key={i}
+            key={rev.id}
             className="p-6 rounded-2xl bg-white dark:bg-[#141517] border border-black/10 dark:border-white/10 shadow-md flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center gap-1 text-[#65a30d] dark:text-[#c6ff00] mb-3">
-                {[...Array(5)].map((_, idx) => (
+                {[...Array(rev.rating || 5)].map((_, idx) => (
                   <Star key={idx} className="w-4 h-4 fill-current" />
                 ))}
               </div>

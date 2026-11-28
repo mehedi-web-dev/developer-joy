@@ -66,7 +66,7 @@ export function HeroSection({
             DEVELOPER
           </h2>
           <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-medium leading-relaxed max-w-xs mt-3 sm:mt-4">
-            WordPress / WooCommerce / React &amp; Next.js development specialist
+            Senior WordPress Developer specializing in custom themes, WooCommerce &amp; modern web applications
           </p>
         </div>
       </div>

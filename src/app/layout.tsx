@@ -28,11 +28,11 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Developer Joy | WordPress & Full-Stack Developer",
+    default: "Developer Joy | Senior WordPress Developer",
     template: "%s | Developer Joy",
   },
   description:
-    "Developer Joy is a professional WordPress and Full-Stack developer specializing in custom themes, WooCommerce stores, speed optimization, and modern React & Next.js applications.",
+    "Developer Joy is a Senior WordPress Developer specializing in custom themes, WooCommerce stores, speed optimization, Elementor Pro, and modern web applications.",
   authors: [{ name: "Developer Joy" }],
   formatDetection: {
     email: false,
@@ -46,15 +46,15 @@ export const metadata: Metadata = {
     type: "website",
     url: "/",
     siteName: "Developer Joy — Portfolio",
-    title: "Developer Joy | WordPress & Full-Stack Developer",
+    title: "Developer Joy | Senior WordPress Developer",
     description:
-      "Explore high-performance WordPress, WooCommerce, React, and Next.js web applications by Developer Joy.",
+      "Explore high-performance WordPress, WooCommerce, and modern web applications by Developer Joy, Senior WordPress Developer.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Developer Joy | WordPress & Full-Stack Developer",
+    title: "Developer Joy | Senior WordPress Developer",
     description:
-      "Explore high-performance WordPress, WooCommerce, React, and Next.js web applications by Developer Joy.",
+      "Explore high-performance WordPress, WooCommerce, and modern web applications by Developer Joy, Senior WordPress Developer.",
   },
   icons: {
     icon: [{ url: "/joy.png" }],

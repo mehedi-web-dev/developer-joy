@@ -9,24 +9,24 @@ import {
 } from "@/components/sections";
 
 export const metadata: Metadata = {
-  title: "Developer Joy | Digital Developer & WordPress Specialist",
+  title: "Developer Joy | Senior WordPress Developer",
   description:
-    "Explore high-performance WordPress, WooCommerce, React, and Next.js web applications by Developer Joy. Guaranteed fast delivery, clean architecture, and conversion-focused design.",
+    "Explore high-performance WordPress, WooCommerce, and modern web applications by Developer Joy, Senior WordPress Developer. Guaranteed fast turnaround, clean architecture, and conversion-focused design.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Developer Joy | Digital Developer & WordPress Specialist",
+    title: "Developer Joy | Senior WordPress Developer",
     description:
-      "Explore high-performance WordPress, WooCommerce, React, and Next.js web applications by Developer Joy.",
+      "Explore high-performance WordPress, WooCommerce, and modern web applications by Developer Joy, Senior WordPress Developer.",
     url: "/",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Developer Joy | Digital Developer & WordPress Specialist",
+    title: "Developer Joy | Senior WordPress Developer",
     description:
-      "Explore high-performance WordPress, WooCommerce, React, and Next.js web applications by Developer Joy.",
+      "Explore high-performance WordPress, WooCommerce, and modern web applications by Developer Joy, Senior WordPress Developer.",
   },
 };
 

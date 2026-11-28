@@ -24,7 +24,7 @@ export function AboutSection({
             Bridging Creative Vision with Engineering Precision
           </h2>
           <p className="text-zinc-700 dark:text-zinc-300 text-sm sm:text-base leading-relaxed mb-4">
-            Over the past 6+ years, I have specialized in WordPress and modern full-stack web engineering—delivering more than 250 successful projects for international businesses, creative agencies, and founders.
+            Over the past 6+ years, I have worked as a Senior WordPress Developer—delivering more than 250 successful projects for international businesses, creative agencies, and founders.
           </p>
           <p className="text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm leading-relaxed mb-8">
             Whether building bespoke Elementor Pro layouts, high-converting WooCommerce stores, or lightning-fast web applications with Next.js, React, and TypeScript, my goal is always the same: clean, scalable code and designs that convert.

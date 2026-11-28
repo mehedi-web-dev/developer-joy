@@ -55,7 +55,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 pb-10 border-b border-black/20">
           <div>
             <span className="text-[11px] sm:text-xs uppercase font-extrabold tracking-widest text-black/70 mb-2 block font-mono">
-              WORDPRESS &amp; FULL-STACK DEVELOPER
+              SENIOR WORDPRESS DEVELOPER
             </span>
             <h2 className="text-3xl sm:text-5xl md:text-6xl font-display font-extrabold tracking-tight leading-none text-black">
               DEVELOPER JOY
