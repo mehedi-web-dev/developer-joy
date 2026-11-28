@@ -32,7 +32,7 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-24 px-4 sm:px-6 relative">
+    <section id="contact" className="py-24 px-4 sm:px-6 relative border-t border-black/10 dark:border-white/10">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-12">
           {/* Avatar with Waving Hand 👋 Badge */}
